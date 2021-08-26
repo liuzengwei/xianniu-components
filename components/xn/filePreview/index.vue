@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import { isImg } from "../../../utils/index";
+import tools from "../../../utils/index";
 export default {
   name: "XnFilePreview",
   props: {
@@ -52,7 +52,7 @@ export default {
     if (this.fileList && this.fileList.length) {
       this.fileList.forEach((item) => {
         const { url } = item;
-        if (isImg(url)) {
+        if (tools.isImg(url)) {
           this.imageList.push(item);
         } else {
           this.previewFileList.push(item);

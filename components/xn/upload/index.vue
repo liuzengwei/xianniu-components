@@ -103,7 +103,7 @@
 <script>
 import ElImageViewer from "element-ui/packages/image/src/image-viewer";
 import * as imageConversion from "image-conversion";
-import { isImg } from "../../../utils/index";
+import tools from "../../../utils/index";
 export default {
   name: "XnUpload",
   components: {
@@ -200,8 +200,8 @@ export default {
     isImage() {
       return (file) => {
         return (
-          isImg(file.url) ||
-          (file.raw && file.raw.fileExt ? isImg(file.raw.fileExt) : "")
+          tools.isImg(file.url) ||
+          (file.raw && file.raw.fileExt ? tools.isImg(file.raw.fileExt) : "")
         );
       };
     },
@@ -248,7 +248,7 @@ export default {
   methods: {
     onProcess(process) {},
     onBeforeUpload(file) {
-      const _isImg = isImg(file.name);
+      const _isImg = tools.isImg(file.name);
       const fileExt = file.name.substring(file.name.lastIndexOf(".") + 1);
       const _maxSize = parseFloat(this.maxSize);
 
@@ -287,7 +287,7 @@ export default {
     },
     onExceedSize(size, maxSize) {
       if (size > maxSize) {
-        this.$message.warning(`最大不能超过${bytesToSize(maxSize)}`);
+        this.$message.warning(`最大不能超过${tools.bytesToSize(maxSize)}`);
         return false;
       }
       return true;
