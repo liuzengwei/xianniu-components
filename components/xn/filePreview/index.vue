@@ -30,38 +30,39 @@
 </template>
 
 <script>
+import { isImg } from "../../../utils/index";
 export default {
-  name: 'XnFilePreview',
+  name: "XnFilePreview",
   props: {
     fileList: {
       type: Array,
       require: true,
       default: () => {
-        return []
-      }
-    }
+        return [];
+      },
+    },
   },
   data() {
     return {
       imageList: [],
-      previewFileList: []
-    }
+      previewFileList: [],
+    };
   },
   created() {
     if (this.fileList && this.fileList.length) {
-      this.fileList.forEach(item => {
-        const { url } = item
-        if (this.$tools.isImg(url)) {
-          this.imageList.push(item)
+      this.fileList.forEach((item) => {
+        const { url } = item;
+        if (isImg(url)) {
+          this.imageList.push(item);
         } else {
-          this.previewFileList.push(item)
+          this.previewFileList.push(item);
         }
-      })
+      });
     }
   },
   mounted() {},
-  methods: {}
-}
+  methods: {},
+};
 </script>
 
 <style scoped lang="scss"></style>

@@ -10,5 +10,8 @@
     "xianniu"
   ],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "image-conversion": "^2.1.1"
+  }
 }

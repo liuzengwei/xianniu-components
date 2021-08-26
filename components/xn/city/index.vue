@@ -20,6 +20,7 @@
 
 <script>
 import citys from '../../../lib/citys'
+import {deepClone} from '../../../utils/index'
 export default {
   name: 'XnCity',
   model: {
@@ -181,7 +182,7 @@ export default {
     },
     // 接口获取城市联动数据
     fnGetCitys() {
-      const _citys = this.$tools.deepClone(citys)
+      const _citys = deepClone(citys)
       this.cityList = this.toTreeDataLevel(_citys)
       this.flattenResult = this.flattenTreeData(
         this.addParentKey(this.cityList)
