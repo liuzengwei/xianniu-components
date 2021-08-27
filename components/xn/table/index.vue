@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-table
-      v-auto-height:maxHeight="-45"
+      v-auto-height:maxHeight="authHeight"
       class="xn-table"
       :data="data"
       :border="border"
@@ -63,7 +63,8 @@
                     :icon="itemBtn.icon"
                     :plain="itemBtn.plain"
                     @click="handleClick(itemBtn.methods, row, $index)"
-                  >{{ itemBtn.label }}</el-button>
+                    >{{ itemBtn.label }}</el-button
+                  >
                 </template>
               </template>
             </template>
@@ -83,7 +84,7 @@
 
 <script>
 export default {
-  name: 'XnTable',
+  name: "XnTable",
   components: {
     expandDom: {
       functional: true,
@@ -93,81 +94,85 @@ export default {
         index: Number,
         column: {
           type: Object,
-          default: null
-        }
+          default: null,
+        },
       },
       render: (h, ctx) => {
         const params = {
           row: ctx.props.row,
-          index: ctx.props.index
-        }
-        if (ctx.props.column) params.column = ctx.props.column
-        return ctx.props.render(h, params)
-      }
-    }
+          index: ctx.props.index,
+        };
+        if (ctx.props.column) params.column = ctx.props.column;
+        return ctx.props.render(h, params);
+      },
+    },
   },
   props: {
     getList: {
       type: Function,
-      default: () => {}
+      default: () => {},
     },
     index: {
       type: Boolean,
-      default: true
+      default: true,
     },
     selection: {
       type: Boolean,
-      default: false
+      default: false,
     },
     data: {
       type: Array,
-      default: () => []
+      default: () => [],
     },
     selectionFixed: {
       type: [Boolean, String],
-      default: false
+      default: false,
     },
     border: {
       type: Boolean,
-      default: false
+      default: false,
     },
     stripe: {
       type: Boolean,
-      default: true
+      default: true,
     },
     hover: {
       type: Boolean,
-      default: true
+      default: true,
     },
     columns: {
       type: Array,
       require: true,
-      default: () => []
+      default: () => [],
     },
     showPage: {
       type: [Boolean, String],
-      default: 'auto'
-    }
+      default: "auto",
+    },
+    authHeight: {
+      type: Number,
+      default: -95,
+    },
   },
   data() {
     return {
-      maxHeight: 0
-    }
+      maxHeight: 0,
+    };
   },
   methods: {
     handleSelectionChange(value) {
-      console.log(value)
+      console.log(value);
     },
     // 处理是否可以选中
     selectInit(row, index) {
-      return true
+      return true;
     },
     // 点击按钮
     handleClick(method, row, idx) {
-      console.log(method, row, idx)
-    }
-  }
-}
+      console.log(method, row, idx);
+    },
+  },
+};
 </script>
 
 <style lang="scss">
