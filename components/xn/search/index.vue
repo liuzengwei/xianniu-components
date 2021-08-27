@@ -102,13 +102,12 @@ export default {
     showShortcut() {
       return (item) => {
         let flag = "";
-        if (item.options && item.options.type) {
-          if (item.options.type.indexOf("range") > -1) {
-            flag = item.options.isShortcut;
-          } else {
-            flag = false;
-          }
+        if (item.type.indexOf("range") > -1) {
+          flag = item.options.isShortcut;
+        } else {
+          flag = false;
         }
+
         return flag;
       };
     },
