@@ -9,7 +9,7 @@
       >
         <el-input
           v-model="form.value[idx].modelVal"
-          clearable
+          :clearable="item.clearable || true"
           :placeholder="item.placeholder"
         />
       </el-form-item>
@@ -22,7 +22,7 @@
         <el-select
           v-model="form.value[idx].modelVal"
           :placeholder="item.placeholder"
-          clearable
+          :clearable="item.clearable || true"
           filterable
         >
           <el-option
@@ -41,19 +41,23 @@
       >
         <xn-date
           v-model="form.value[idx].modelVal"
-          clearable
-          is-shortcut
+          :type="
+            item.options && item.options.type ? item.options.type : 'daterange'
+          "
+          :is-shortcut="showShortcut(item)"
+          :placeholder="item.placeholder"
+          :startPlaceholder="item.options && item.options.startPlaceholder ? item.options.startPlaceholder : ''"
+          :endPlaceholder="item.options && item.options.endPlaceholder ? item.options.endPlaceholder : ''"
+          :clearable="item.clearable || true"
           @on-change="onChangeDate"
           @on-format="onChangeDateFormat"
         />
       </el-form-item>
     </template>
     <el-form-item>
-      <el-button
-        type="primary"
-        icon="el-icon-search"
-        @click="onSearch"
-      >搜索</el-button>
+      <el-button type="primary" icon="el-icon-search" @click="onSearch"
+        >搜索</el-button
+      >
       <el-button @click="onReset">重置</el-button>
     </el-form-item>
     <div v-show="false" />
@@ -62,70 +66,92 @@
 
 <script>
 export default {
-  name: 'XnSearch',
+  name: "XnSearch",
   props: {
     formData: {
       type: Array,
-      default: () => []
+      default: () => [],
     },
     labelWidth: {
       type: String,
-      default: '80px'
-    }
+      default: "80px",
+    },
+  },
+  computed: {
+    showShortcut() {
+      return (item) => {
+        let flag = "";
+        if (item.options && item.options.type) {
+          if(item.options.type.indexOf('range')>-1){
+            flag = item.options.isShortcut
+          }else{
+            flag = false
+          }
+        }
+        return flag;
+      };
+    },
   },
   data() {
     return {
       form: {
-        value: []
-      }
-    }
+        value: [],
+      },
+    };
   },
   created() {
     this.formData.forEach((item, index) => {
       this.form.value.push({
         key: item.prop,
-        modelVal: ''
-      })
-    })
+        modelVal: "",
+      });
+    });
   },
   methods: {
     onSearch() {
-      const formValue = {}
+      const formValue = {};
       if (this.formData) {
         this.formData.forEach((item, index) => {
-          const key = item.prop
-          const value = this.form.value[index].modelVal
-          if (item.type === 'date') {
-            formValue[item.options.start] = value[0] || ''
-            formValue[item.options.end] = value[1] || ''
+          const key = item.prop;
+          const value = this.form.value[index].modelVal;
+          if (item.type === "date") {
+            if (
+              item.options &&
+              item.options.start &&
+              item.options &&
+              item.options.end
+            ) {
+              formValue[item.options.start] = value[0] || "";
+              formValue[item.options.end] = value[1] || "";
+            }
           } else {
-            formValue[key] = value
+            console.log(formValue[key]);
+            formValue[key] = value;
           }
-        })
+        });
       }
-      this.$emit('on-search', formValue)
+      this.$emit("on-search", formValue);
     },
     onReset() {
-      this.form.value = []
+      this.form.value = [];
       this.formData.forEach((item, index) => {
         this.form.value.push({
           key: item.prop,
-          modelVal: ''
-        })
-      })
-      this.$emit('on-reset')
-      this.$emit('on-search', {})
+          modelVal: "",
+        });
+      });
+      this.$emit("on-reset");
+      this.$emit("on-search", {});
     },
     onChangeDate(val) {
-      console.log(val)
+      // console.log(val);
     },
     onChangeDateFormat(val) {
-      console.log(val)
-    }
-  }
-}
+      // console.log(val);
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>
-
 </style>

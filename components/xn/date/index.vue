@@ -4,8 +4,8 @@
     :type="type"
     align="right"
     :placeholder="placeholder"
-    start-placeholder="开始日期"
-    end-placeholder="结束日期"
+    :start-placeholder="startPlaceholder"
+    :end-placeholder="endPlaceholder"
     :picker-options="isShortcut ? pickerOptionsPlug : {}"
     :format="format ? format : _format.format"
     :value-format="valueFormat ? valueFormat : _format.valueFormat"
@@ -19,10 +19,10 @@
 
 <script>
 export default {
-  name: 'XnDate',
+  name: "XnDate",
   model: {
-    prop: 'value',
-    event: 'on-change'
+    prop: "value",
+    event: "on-change",
   },
   props: {
     /**
@@ -32,166 +32,178 @@ export default {
      */
     type: {
       type: String,
-      default: 'daterange'
+      default: "daterange",
     },
     placeholder: {
       type: String,
-      default: '请选择'
+      default: "请选择",
     },
     value: {
       type: [String, Array],
-      default: () => []
+      default: () => [],
     },
     disabled: {
       type: Boolean,
-      default: false
+      default: false,
     },
     readonly: {
       type: Boolean,
-      default: false
+      default: false,
     },
     clearable: {
       type: Boolean,
-      default: true
+      default: true,
     },
     // 显示的格式
     format: {
       type: String,
-      default: ''
+      default: "",
     },
     // 值的格式
     valueFormat: {
       type: String,
-      default: ''
+      default: "",
     },
     // 开启快捷选项
     isShortcut: {
       type: Boolean,
-      default: false
+      default: false,
     },
     firstDayOfWeek: {
       type: Number,
-      default: 1
-    }
+      default: 1,
+    },
+    startPlaceholder: {
+      type: String,
+      default: "开始日期",
+    },
+    endPlaceholder: {
+      type: String,
+      default: "结束日期",
+    },
   },
   data() {
     return {
       pickerOptionsPlug: {
         shortcuts: [
           {
-            text: '昨天',
+            text: "昨天",
             onClick(picker) {
-              const start = new Date()
-              start.setTime(start.getTime() - 3600 * 1000 * 24)
-              picker.$emit('pick', [start, start])
-            }
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24);
+              picker.$emit("pick", [start, start]);
+            },
           },
           {
-            text: '最近一周',
+            text: "最近一周",
             onClick(picker) {
-              const end = new Date()
-              const start = new Date()
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7)
-              picker.$emit('pick', [start, end])
-            }
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+              picker.$emit("pick", [start, end]);
+            },
           },
           {
-            text: '最近一个月',
+            text: "最近一个月",
             onClick(picker) {
-              const end = new Date()
-              const start = new Date()
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30)
-              picker.$emit('pick', [start, end])
-            }
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+              picker.$emit("pick", [start, end]);
+            },
           },
           {
-            text: '最近三个月',
+            text: "最近三个月",
             onClick(picker) {
-              const end = new Date()
-              const start = new Date()
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 90)
-              picker.$emit('pick', [start, end])
-            }
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+              picker.$emit("pick", [start, end]);
+            },
           },
           {
-            text: '最近六个月',
+            text: "最近六个月",
             onClick(picker) {
-              const end = new Date()
-              const start = new Date()
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 180)
-              picker.$emit('pick', [start, end])
-            }
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 180);
+              picker.$emit("pick", [start, end]);
+            },
           },
           {
-            text: '最近十二个月',
+            text: "最近十二个月",
             onClick(picker) {
-              const end = new Date()
-              const start = new Date()
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 360)
-              picker.$emit('pick', [start, end])
-            }
-          }
-        ]
-      }
-    }
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 360);
+              picker.$emit("pick", [start, end]);
+            },
+          },
+        ],
+      },
+    };
   },
   computed: {
     _format() {
-      const obj = {}
+      const obj = {};
       switch (this.type) {
-        case 'date':
-          obj.format = 'yyyy-MM-dd'
-          obj.valueFormat = 'yyyy-MM-dd'
-          break
-        case 'week':
-          obj.format = 'yyyy 第 WW 周'
-          obj.valueFormat = 'yyyy-MM-dd'
-          break
-        case 'month':
-          obj.format = 'yyyy-MM'
-          obj.valueFormat = 'yyyy-MM'
-          break
-        case 'year':
-          obj.format = 'yyyy'
-          obj.valueFormat = 'yyyy'
-          break
-        case 'dates':
-          obj.format = 'yyyy-MM-dd'
-          obj.valueFormat = 'yyyy-MM-dd'
-          break
-        case 'datetime':
-          obj.format = 'yyyy-MM-dd HH:mm:ss'
-          obj.valueFormat = 'yyyy-MM-dd HH:mm:ss'
-          break
-        case 'datetimerange':
-          obj.format = 'yyyy-MM-dd HH:mm:ss'
-          obj.valueFormat = 'yyyy-MM-dd HH:mm:ss'
-          break
-        case 'daterange':
-          obj.format = 'yyyy-MM-dd'
-          obj.valueFormat = 'yyyy-MM-dd HH:mm:ss'
-          break
-        case 'monthrange':
-          obj.format = 'yyyy-MM'
-          obj.valueFormat = 'yyyy-MM'
-          break
+        case "date":
+          obj.format = "yyyy-MM-dd";
+          obj.valueFormat = "yyyy-MM-dd";
+          break;
+        case "week":
+          obj.format = "yyyy 第 WW 周";
+          obj.valueFormat = "yyyy-MM-dd";
+          break;
+        case "month":
+          obj.format = "yyyy-MM";
+          obj.valueFormat = "yyyy-MM";
+          break;
+        case "year":
+          obj.format = "yyyy";
+          obj.valueFormat = "yyyy";
+          break;
+        case "dates":
+          obj.format = "yyyy-MM-dd";
+          obj.valueFormat = "yyyy-MM-dd";
+          break;
+        case "datetime":
+          obj.format = "yyyy-MM-dd HH:mm:ss";
+          obj.valueFormat = "yyyy-MM-dd HH:mm:ss";
+          break;
+        case "datetimerange":
+          obj.format = "yyyy-MM-dd HH:mm:ss";
+          obj.valueFormat = "yyyy-MM-dd HH:mm:ss";
+          break;
+        case "daterange":
+          obj.format = "yyyy-MM-dd";
+          obj.valueFormat = "yyyy-MM-dd HH:mm:ss";
+          break;
+        case "monthrange":
+          obj.format = "yyyy-MM";
+          obj.valueFormat = "yyyy-MM";
+          break;
       }
-      return obj
-    }
+      return obj;
+    },
   },
   methods: {
     onChange(value) {
-      if (this.type === 'datetimerange' || this.type === 'daterange' || this.type === 'monthrange') {
-        const start = value && value.length ? value[0] : ''
-        const end = value && value.length ? value[1] : ''
-        this.$emit('on-format', { value, start: start || '', end: end || '' })
+      if (
+        this.type === "datetimerange" ||
+        this.type === "daterange" ||
+        this.type === "monthrange"
+      ) {
+        const start = value && value.length ? value[0] : "";
+        const end = value && value.length ? value[1] : "";
+        this.$emit("on-format", { value, start: start || "", end: end || "" });
       } else {
-        this.$emit('on-format', { value })
+        this.$emit("on-format", { value });
       }
-      this.$emit('on-change', value || '')
-    }
-  }
-}
+      this.$emit("on-change", value || "");
+    },
+  },
+};
 </script>
 
 <style>
