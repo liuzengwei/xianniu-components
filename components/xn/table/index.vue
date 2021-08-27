@@ -15,7 +15,7 @@
           v-if="selection && data.length"
           width="50px"
           type="selection"
-          fixed
+          :fixed="selectionFixed"
           :selectable="selectInit"
         />
         <el-table-column
@@ -122,7 +122,7 @@ export default {
       type: Array,
       default: () => []
     },
-    fixed: {
+    selectionFixed: {
       type: [Boolean, String],
       default: false
     },
