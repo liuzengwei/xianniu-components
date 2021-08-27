@@ -134,7 +134,7 @@ export default {
         this.formData.forEach((item, index) => {
           const key = item.prop;
           const value = this.form.value[index].modelVal;
-          if (item.type === "date") {
+          if (this.isDate(item.type)) {
             if (
               item.options &&
               item.options.start &&
