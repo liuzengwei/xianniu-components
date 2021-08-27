@@ -32,6 +32,7 @@
           :label="item.label"
           :width="item.width"
           :fixed="item.fixed"
+          :sortable="item.sortable"
         >
           <template slot-scope="{ row, $index }">
             <expand-dom
