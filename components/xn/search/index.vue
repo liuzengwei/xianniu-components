@@ -34,20 +34,26 @@
         </el-select>
       </el-form-item>
       <el-form-item
-        v-if="item.type === 'date'"
+        v-if="isDate(item.type)"
         :key="idx"
         :label="item.label"
         :prop="item.prop"
       >
         <xn-date
           v-model="form.value[idx].modelVal"
-          :type="
-            item.options && item.options.type ? item.options.type : 'daterange'
-          "
+          :type="item.type || 'daterange'"
           :is-shortcut="showShortcut(item)"
           :placeholder="item.placeholder"
-          :startPlaceholder="item.options && item.options.startPlaceholder ? item.options.startPlaceholder : ''"
-          :endPlaceholder="item.options && item.options.endPlaceholder ? item.options.endPlaceholder : ''"
+          :startPlaceholder="
+            item.options && item.options.startPlaceholder
+              ? item.options.startPlaceholder
+              : ''
+          "
+          :endPlaceholder="
+            item.options && item.options.endPlaceholder
+              ? item.options.endPlaceholder
+              : ''
+          "
           :clearable="item.clearable || true"
           @on-change="onChangeDate"
           @on-format="onChangeDateFormat"
@@ -78,14 +84,29 @@ export default {
     },
   },
   computed: {
+    isDate() {
+      return (type) => {
+        return [
+          "date",
+          "week",
+          "month",
+          "year",
+          "dates",
+          "datetime",
+          "datetimerange",
+          "daterange",
+          "monthrange",
+        ].includes(type);
+      };
+    },
     showShortcut() {
       return (item) => {
         let flag = "";
         if (item.options && item.options.type) {
-          if(item.options.type.indexOf('range')>-1){
-            flag = item.options.isShortcut
-          }else{
-            flag = false
+          if (item.options.type.indexOf("range") > -1) {
+            flag = item.options.isShortcut;
+          } else {
+            flag = false;
           }
         }
         return flag;
