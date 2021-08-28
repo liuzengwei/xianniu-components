@@ -6,9 +6,8 @@
         :style="{ width: labelWidth }"
         v-html="label"
       />
-      <div v-if="$slots" class="desc-item-value">
-        <slot v-if="!isTrue" />
-        <span v-else>-</span>
+      <div class="desc-item-value">
+        <slot></slot>
       </div>
     </div>
   </el-col>
