@@ -7,8 +7,8 @@
         v-html="label"
       />
       <div v-if="$slots" class="desc-item-value">
-        <slot v-if="isTrue" />
-        <span v-else>暂无数据</span>
+        <slot v-if="!isTrue" />
+        <span v-else>-</span>
       </div>
     </div>
   </el-col>
