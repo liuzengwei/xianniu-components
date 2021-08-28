@@ -46,13 +46,9 @@
           :placeholder="item.placeholder"
           :startPlaceholder="
             item.options && item.options.startPlaceholder
-              ? item.options.startPlaceholder
-              : ''
           "
           :endPlaceholder="
             item.options && item.options.endPlaceholder
-              ? item.options.endPlaceholder
-              : ''
           "
           :clearable="item.clearable || true"
           @on-change="onChangeDate"
