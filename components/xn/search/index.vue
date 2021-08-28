@@ -95,10 +95,19 @@ export default {
         ].includes(type);
       };
     },
+    isRange(){
+      return (type) => {
+        return [
+          "datetimerange",
+          "daterange",
+          "monthrange",
+        ].includes(type);
+      };
+    },
     showShortcut() {
       return (item) => {
         let flag = "";
-        if (item.type.indexOf("range") > -1) {
+        if (this.isRange(item.type)) {
           flag = item.options.isShortcut;
         } else {
           flag = false;
@@ -130,7 +139,7 @@ export default {
         this.formData.forEach((item, index) => {
           const key = item.prop;
           const value = this.form.value[index].modelVal;
-          if (this.isDate(item.type)) {
+          if (this.isRange(item.type)) {
             if (
               item.options &&
               item.options.start &&
@@ -141,7 +150,6 @@ export default {
               formValue[item.options.end] = value[1] || "";
             }
           } else {
-            console.log(formValue[key]);
             formValue[key] = value;
           }
         });
