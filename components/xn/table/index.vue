@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="xn-table-box">
     <el-table
       v-auto-height:maxHeight="authHeight"
       class="xn-table"
@@ -177,6 +177,9 @@ export default {
 </script>
 
 <style lang="scss">
+.xn-table-box {
+  width: 100%;
+}
 .xn-table .el-table__body-wrapper::-webkit-scrollbar {
   width: 15px;
   height: 15px;
