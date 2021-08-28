@@ -1,30 +1,29 @@
 <template>
   <div class="xn-table-box">
     <el-table
-      v-auto-height:maxHeight="authHeight"
+      v-auto-height:maxHeight="autoHeight"
       class="xn-table"
       :data="data"
       :border="border"
       :stripe="stripe"
       :hover="hover"
-      :max-height="maxHeight"
+      :max-height="autoHeight ? maxHeight : null"
       @selection-change="handleSelectionChange"
     >
+      <el-table-column
+        v-if="selection && data.length"
+        width="50px"
+        type="selection"
+        :fixed="selectionFixed"
+        :selectable="selectInit"
+      />
+      <el-table-column
+        v-if="index && data.length"
+        width="50px"
+        label="No."
+        type="index"
+      />
       <slot>
-        <el-table-column
-          v-if="selection && data.length"
-          width="50px"
-          type="selection"
-          :fixed="selectionFixed"
-          :selectable="selectInit"
-        />
-        <el-table-column
-          v-if="index && data.length"
-          width="50px"
-          label="No."
-          type="index"
-        />
-
         <el-table-column
           v-for="(item, idx) in columns"
           :key="idx"
@@ -149,8 +148,8 @@ export default {
       type: [Boolean, String],
       default: "auto",
     },
-    authHeight: {
-      type: Number,
+    autoHeight: {
+      type: [Boolean, Number],
       default: -95,
     },
   },
@@ -161,7 +160,6 @@ export default {
   },
   methods: {
     handleSelectionChange(value) {
-      console.log(value);
       this.$emit("on-selection", value);
     },
     // 处理是否可以选中
