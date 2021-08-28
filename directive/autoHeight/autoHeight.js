@@ -1,10 +1,8 @@
 export default {
     bind(el, binding, vnode) {
-      console.log(binding)
       if (binding.value === false) return
     },
     componentUpdated(el, binding, vnode) {
-      console.log('binding', binding)
       if (binding.value === false) return
       const ctx = vnode.context
   
