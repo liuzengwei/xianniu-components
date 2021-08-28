@@ -162,6 +162,7 @@ export default {
   methods: {
     handleSelectionChange(value) {
       console.log(value);
+      this.$emit("on-selection", value);
     },
     // 处理是否可以选中
     selectInit(row, index) {
@@ -169,7 +170,7 @@ export default {
     },
     // 点击按钮
     handleClick(method, row, idx) {
-      console.log(method, row, idx);
+      this.$emit("handle-buttons", { method, row, idx });
     },
   },
 };
