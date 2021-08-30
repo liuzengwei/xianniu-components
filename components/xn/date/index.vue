@@ -9,7 +9,7 @@
     :picker-options="isShortcut ? pickerOptionsPlug : {}"
     :format="format ? format : _format.format"
     :value-format="valueFormat ? valueFormat : _format.valueFormat"
-    style="width: 100%"
+    :style="styles"
     :disabled="disabled"
     :readonly="readonly"
     :clearable="clearable"
@@ -144,6 +144,12 @@ export default {
     };
   },
   computed: {
+    styles() {
+      const _isRange = this.isRange(this.type)
+      return {
+        width: _isRange ? "100%" : 'auto',
+      };
+    },
     _format() {
       const obj = {};
       switch (this.type) {
@@ -186,6 +192,11 @@ export default {
       }
       return obj;
     },
+  },
+  isRange() {
+    return (type) => {
+      return ["datetimerange", "daterange", "monthrange"].includes(type);
+    };
   },
   methods: {
     onChange(value) {
