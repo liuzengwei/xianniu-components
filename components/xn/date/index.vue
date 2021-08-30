@@ -145,9 +145,9 @@ export default {
   },
   computed: {
     styles() {
-      const _isRange = this.isRange(this.type)
+      const _isRange = this.isRange(this.type);
       return {
-        width: _isRange ? "100%" : 'auto',
+        width: _isRange ? "100%" : "auto",
       };
     },
     _format() {
@@ -192,11 +192,11 @@ export default {
       }
       return obj;
     },
-  },
-  isRange() {
-    return (type) => {
-      return ["datetimerange", "daterange", "monthrange"].includes(type);
-    };
+    isRange() {
+      return (type) => {
+        return ["datetimerange", "daterange", "monthrange"].includes(type);
+      };
+    },
   },
   methods: {
     onChange(value) {
