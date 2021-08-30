@@ -23,12 +23,7 @@
       :headers="uploadHeaders"
       :on-exceed="onExceed"
     >
-      <template v-if="listType === 'idcard'">
-        <template slot="trigger">
-          <xn-idcard :type="type" />
-        </template>
-      </template>
-      <template v-else-if="listType === 'picture-card'">
+      <template v-if="listType === 'picture-card'">
         <i slot="trigger" class="el-icon-plus" />
       </template>
       <template v-else>
@@ -71,6 +66,7 @@
             @click="handlePictureCardPreview(file)"
           >
             <i class="fz-16 el-icon-zoom-in" />
+
           </span>
           <span
             class="el-upload-list__item-delete icon"
@@ -97,117 +93,123 @@
       :z-index="999999"
       :url-list="[imageView]"
     />
+
   </div>
 </template>
 
 <script>
-import ElImageViewer from "element-ui/packages/image/src/image-viewer";
-import * as imageConversion from "image-conversion";
+import ElImageViewer from 'element-ui/packages/image/src/image-viewer'
+import * as imageConversion from 'image-conversion'
+import domain from '@/env-config'
 import tools from "../../../utils/index";
 export default {
-  name: "XnUpload",
+  name: 'XnUpload',
   components: {
-    ElImageViewer,
+    ElImageViewer
   },
   model: {
-    prop: "value",
-    event: "on-change",
+    prop: 'value',
+    event: 'on-change'
   },
   props: {
     listType: {
       type: String,
-      default: "picture-card",
+      default: 'picture-card'
     },
     showFileList: {
       type: Boolean,
-      default: true,
+      default: true
     },
     hiddenUpload: {
       type: Boolean,
-      default: false,
+      default: false
     },
     fileList: {
       type: Array,
-      default: () => [],
+      default: () => []
     },
     disabled: Boolean,
     autoUpload: {
       type: Boolean,
-      default: true,
+      default: true
     },
     limit: {
       type: Number,
-      default: 1,
+      default: 1
     },
     tip: {
       type: String,
-      default: "",
+      default: ''
     },
     multiple: {
       type: Boolean,
-      default: true,
+      default: true
     },
     accept: {
       type: Array,
-      default: () => ["jpg", "jpeg", "png", "pdf"],
+      default: () => ['jpg', 'jpeg', 'png', 'pdf','docx']
     },
     maxSize: {
       type: Number,
-      default: 1024 * 5 * 1024, // 最大限制 5M
+      default: 1024 * 5 * 1024 // 最大限制 5M
     },
     compress: {
       type: [Boolean, Number],
-      default: false,
+      default: false
     },
     type: {
       type: String,
-      default: "front",
+      default: 'front',
       validator: (val) => {
-        return ["front", "back"].includes(val);
-      },
+        return ['front', 'back'].includes(val)
+      }
     },
     styles: {
       type: Object,
-      default: () => {},
+      default: () => {}
     },
     value: {
-      // type: String,
-      type: Array,
-      default: () => "",
-    },
+      type: String,
+      default: () => ''
+    }
   },
   data() {
     return {
       isShowImageView: false,
-      imageView: "",
+      imageView: '',
       isHidden: false,
       actionParams: {
-        action: `${process.env.VUE_APP_AUTH_API}/auth/upload/uploadFile`,
+        action: `${domain.upload}/upload/uploadFile`
       },
       uploadHeaders: {
-        xnToken: this.$store.getters.token,
+        xnToken: this.$store.getters.token
       },
       successFileList: [],
-      viewList: [],
-    };
+      viewList: []
+    }
+  },
+  created(){
+    console.log(tools);
   },
   computed: {
     process() {
       return (num) => {
-        return Math.floor(num);
-      };
+        return Math.floor(num)
+      }
     },
     isImage() {
       return (file) => {
         return (
           tools.isImg(file.url) ||
-          (file.raw && file.raw.fileExt ? tools.isImg(file.raw.fileExt) : "")
-        );
-      };
-    },
+          (file.raw && file.raw.fileExt
+            ? tools.isImg(file.raw.fileExt)
+            : '')
+        )
+      }
+    }
   },
   watch: {
-    /* value: {
+    value: {
       handler(n) {
         // console.log('value', n)
         // this.fileListViews(n)
@@ -219,83 +221,82 @@ export default {
         // this.$emit('update:fileList', fileList.length ? fileList : [])
       },
       immediate: true
-    }, */
+    },
     fileList: {
       handler(n) {
         if (this.limit === n.length) {
-          this.isHidden = true;
+          this.isHidden = true
         } else {
-          this.isHidden = false;
+          this.isHidden = false
         }
-        console.log(n);
-
         const arr = n.map((item) => {
           if (item.response && item.response.code === 200) {
-            return item.response.data.filePath;
+            return item.response.data.url
           } else if (item.url) {
-            return item.url;
+            return item.url
           }
-        });
-        // this.$emit('on-change', arr.join(','))
-        this.$emit("on-change", arr);
+        })
+        this.$emit('on-change', arr.join(','))
       },
-      immediate: true,
-    },
+      immediate: true
+    }
   },
   beforeDestroy() {
-    // this.$emit("update:fileList", []);
+    this.$emit('update:fileList', [])
   },
   methods: {
     onProcess(process) {},
     onBeforeUpload(file) {
-      const _isImg = tools.isImg(file.name);
-      const fileExt = file.name.substring(file.name.lastIndexOf(".") + 1);
-      const _maxSize = parseFloat(this.maxSize);
+      const _isImg = tools.isImg(file.name)
+      const fileExt = file.name.substring(file.name.lastIndexOf('.') + 1)
+      const _maxSize = parseFloat(this.maxSize)
 
       // 判断上传格式
-      file.fileExt = `.${fileExt}`;
-      if (!this.accept.includes(fileExt.toLowerCase())) {
-        this.$message.warning(`请上传指定格式【${this.accept}】`);
-        return false;
+      file.fileExt = `.${fileExt}`
+      if (!this.accept.includes(fileExt)) {
+        this.$message.warning(`请上传指定格式【${this.accept}】`)
+        return false
       }
       // 如果是图片 时候开启压缩
       if (_isImg) {
         if (this.compress) {
-          const _num = this.compress - 0;
-          const conversionType = _num > 1 ? "compressAccurately" : "compress";
+          const _num = this.compress - 0
+          const conversionType = _num > 1 ? 'compressAccurately' : 'compress'
           imageConversion[conversionType](file, _num).then((result) => {
             // console.log('图片压缩')
             if (!this.onExceedSize(result.size, _maxSize)) {
-              return false;
+              return false
             }
-          });
+          })
         } else {
           //   console.log('图片未开启')
           if (!this.onExceedSize(file.size, _maxSize)) {
-            return false;
+            return false
           }
         }
       } else {
         // console.log('不是图片')
         if (!this.onExceedSize(file.size, _maxSize)) {
-          return false;
+          return false
         }
       }
-      if (this.listType === "idcard") {
-        this.isHidden = true;
+      if (this.listType === 'idcard') {
+        this.isHidden = true
       }
     },
     onExceedSize(size, maxSize) {
       if (size > maxSize) {
-        this.$message.warning(`最大不能超过${tools.bytesToSize(maxSize)}`);
-        return false;
+        this.$message.warning(
+          `最大不能超过${tools.bytesToSize(maxSize)}`
+        )
+        return false
       }
-      return true;
+      return true
     },
     onChange(file, fileList) {
       // const arr = fileList.map((item) => {
       //   if (item.response && item.response.code === 200) {
-      //     return item.response.data.filePath
+      //     return item.response.data.url
       //   } else if (item.url && item.status === 'success') {
       //     return item.url
       //   }
@@ -305,44 +306,43 @@ export default {
     },
     // 回显上传资源
     fileListViews(url) {
-      if (!url) return [];
-      const arr = url.split(",").map((item) => ({ url: item, name: item }));
-      this.viewList = arr;
-      this.$emit("update:fileList", arr);
+      if (!url) return []
+      const arr = url.split(',').map((item) => ({ url: item, name: item }))
+      this.viewList = arr
+      this.$emit('update:fileList', arr)
     },
     onSuccess(response, file, fileList) {
-      if (this.listType === "idcard") {
-        this.isHidden = false;
+      if (this.listType === 'idcard') {
+        this.isHidden = false
       }
 
       const arr = fileList.map((item) => {
         if (item.response && item.response.code === 200) {
-          return item.response.data.filePath;
+          return item.response.data.url
         }
-      });
-      this.$emit("update:fileList", fileList);
-      // this.$emit('on-success', arr.join(','))
-      this.$emit("on-success", arr);
+      })
+      this.$emit('update:fileList', fileList)
+      this.$emit('on-success', arr.join(','))
     },
     onError() {
       //   console.log(err, file, fileList)
-      this.$message.error("上传失败，请重试");
+      this.$message.error('上传失败，请重试')
     },
     onSubmitUpload() {
-      this.$refs.upload.submit();
+      this.$refs.upload.submit()
     },
     onAbort() {
-      this.$refs.upload.abort();
+      this.$refs.upload.abort()
     },
 
     onExceed(file, fileList) {
-      this.$message.warning(`上传总数限制为【${this.limit}】个，请删除后上传`);
+      this.$message.warning(`上传总数限制为【${this.limit}】个，请删除后上传`)
     },
     handlePictureCardPreview(file) {
-      this.isShowImageView = true;
+      this.isShowImageView = true
       this.$nextTick(() => {
-        this.imageView = file.url;
-      });
+        this.imageView = file.url
+      })
     },
     async handleDownload({ url }) {
       // const response = await fetch(url) // 内容转变成blob地址
@@ -353,40 +353,36 @@ export default {
       // a.download = 'name'
       // a.click()
       // a.remove()
-      const elt = document.createElement("a");
-      elt.setAttribute("href", url);
-      elt.setAttribute("download", "下载文件");
-      elt.style.display = "none";
-      elt.target = "_blank";
-      document.body.appendChild(elt);
-      elt.click();
-      document.body.removeChild(elt);
+      const elt = document.createElement('a')
+      elt.setAttribute('href', url)
+      elt.setAttribute('download', '下载文件')
+      elt.style.display = 'none'
+      elt.target = '_blank'
+      document.body.appendChild(elt)
+      elt.click()
+      document.body.removeChild(elt)
     },
     handleRemove(file, fileList) {
       fileList.forEach((item, idx, arr) => {
         if (file.uid === item.uid) {
-          fileList.splice(idx, 1);
+          fileList.splice(idx, 1)
         }
-      });
+      })
       if (this.viewList.length) {
         this.viewList.forEach((item, idx, arr1) => {
           if (item.url === file.url) {
-            this.viewList.splice(idx, 1);
+            this.viewList.splice(idx, 1)
           }
-        });
+        })
       }
-      this.$emit("update:fileList", fileList);
-      // this.$emit('on-change', fileList.map(item => item.url).join(','))
-      this.$emit(
-        "on-change",
-        fileList.map((item) => item.url)
-      );
+      this.$emit('update:fileList', fileList)
+      this.$emit('on-change', fileList.map(item => item.url).join(','))
     },
     closeViewer() {
-      this.isShowImageView = false;
-    },
-  },
-};
+      this.isShowImageView = false
+    }
+  }
+}
 </script>
 
 <style scoped lang="scss">
