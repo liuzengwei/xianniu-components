@@ -101,8 +101,6 @@
           </span>
         </span>
       </div>
-      <!-- <el-button slot="trigger" size="small" type="primary">select file</el-button> -->
-
       <div v-if="tip !== ''" slot="tip" class="el-upload__tip">{{ tip }}</div>
     </el-upload>
     <el-image-viewer
