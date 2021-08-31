@@ -62,7 +62,11 @@
                     :icon="itemBtn.icon"
                     :plain="itemBtn.plain"
                     @click="handleClick(itemBtn.methods, row, $index)"
-                    >{{ itemBtn.label }}</el-button
+                    >{{
+                      typeof itemBtn.label === "function"
+                        ? itemBtn.label(row)
+                        : itemBtn.label
+                    }}</el-button
                   >
                 </template>
               </template>
