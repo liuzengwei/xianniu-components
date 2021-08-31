@@ -16,7 +16,6 @@
       :disabled="disabled"
       :file-list.sync="fileList"
       :on-success="onSuccess"
-      :on-change="onChange"
       :on-error="onError"
       :before-upload="onBeforeUpload"
       :style="styles"
@@ -37,6 +36,19 @@
         class="upload-slot"
         :class="{ 'upload-slot-idcard': listType === 'idcard' }"
       >
+        <el-popover
+          width="200"
+          trigger="hover"
+        >
+          <div>
+            <div>文件名：{{ file.accessoryName }}</div>
+            <div>文件大小：{{ tools.bytesToSize(file.accessorySize) }}</div>
+            <div>文件格式：{{ file.ext }}</div>
+            <div>地址：{{ file.url }}</div>
+            <div>是否是图片：{{ file.imgFlag ? '图片' : '文件' }}</div>
+          </div>
+          <div v-if="file.ext" slot="reference" :title="file.accessoryName" class="ext">{{ file.ext }}</div>
+        </el-popover>
         <template v-if="isImage(file)">
           <el-image
             class="el-upload-list__item-thumbnail"
@@ -47,8 +59,11 @@
         </template>
         <template v-else>
           <div class="xn-upload-list__item--file">
-            <i class="el-icon el-icon-files" />
-            <div class="file-name">{{ file.name }}</div>
+            <div class="annex">
+              <i class="el-icon el-icon-folder" />
+              <span class="label">附件</span>
+            </div>
+            <div class="file-name">{{ file.accessoryName }}</div>
           </div>
         </template>
         <div v-if="file.status === 'uploading'" class="process">
@@ -66,7 +81,6 @@
             @click="handlePictureCardPreview(file)"
           >
             <i class="fz-16 el-icon-zoom-in" />
-
           </span>
           <span
             class="el-upload-list__item-delete icon"
@@ -93,7 +107,6 @@
       :z-index="999999"
       :url-list="[imageView]"
     />
-
   </div>
 </template>
 
@@ -101,15 +114,11 @@
 import ElImageViewer from 'element-ui/packages/image/src/image-viewer'
 import * as imageConversion from 'image-conversion'
 import domain from '@/env-config'
-import tools from "../../../utils/index";
+import tools from '../../../utils'
 export default {
-  name: 'XnUpload',
+  name: 'XnUploadnew',
   components: {
     ElImageViewer
-  },
-  model: {
-    prop: 'value',
-    event: 'on-change'
   },
   props: {
     listType: {
@@ -147,7 +156,7 @@ export default {
     },
     accept: {
       type: Array,
-      default: () => ['jpg', 'jpeg', 'png', 'pdf','docx']
+      default: () => ['jpg', 'jpeg', 'png', 'pdf']
     },
     maxSize: {
       type: Number,
@@ -167,10 +176,6 @@ export default {
     styles: {
       type: Object,
       default: () => {}
-    },
-    value: {
-      type: String,
-      default: () => ''
     }
   },
   data() {
@@ -184,12 +189,9 @@ export default {
       uploadHeaders: {
         xnToken: this.$store.getters.token
       },
-      successFileList: [],
-      viewList: []
+      viewList: [],
+      tools
     }
-  },
-  created(){
-    console.log(tools);
   },
   computed: {
     process() {
@@ -199,29 +201,11 @@ export default {
     },
     isImage() {
       return (file) => {
-        return (
-          tools.isImg(file.url) ||
-          (file.raw && file.raw.fileExt
-            ? tools.isImg(file.raw.fileExt)
-            : '')
-        )
+        return file.imgFlag
       }
     }
   },
   watch: {
-    value: {
-      handler(n) {
-        // console.log('value', n)
-        // this.fileListViews(n)
-        // const arr = n.split(',')
-        // const fileList = arr.map(item => {
-        //   return { url: item }
-        // }).filter(item => item.url !== '')
-        // console.log(fileList)
-        // this.$emit('update:fileList', fileList.length ? fileList : [])
-      },
-      immediate: true
-    },
     fileList: {
       handler(n) {
         if (this.limit === n.length) {
@@ -229,30 +213,23 @@ export default {
         } else {
           this.isHidden = false
         }
-        const arr = n.map((item) => {
-          if (item.response && item.response.code === 200) {
-            return item.response.data.url
-          } else if (item.url) {
-            return item.url
-          }
-        })
-        this.$emit('on-change', arr.join(','))
       },
       immediate: true
     }
   },
+  created() {},
   beforeDestroy() {
     this.$emit('update:fileList', [])
   },
   methods: {
     onProcess(process) {},
     onBeforeUpload(file) {
-      const _isImg = tools.isImg(file.name)
+      const _isImg = true
       const fileExt = file.name.substring(file.name.lastIndexOf('.') + 1)
       const _maxSize = parseFloat(this.maxSize)
 
       // 判断上传格式
-      file.fileExt = `.${fileExt}`
+      file.fileExt = `.${fileExt}`.toLowerCase()
       if (!this.accept.includes(fileExt)) {
         this.$message.warning(`请上传指定格式【${this.accept}】`)
         return false
@@ -263,25 +240,19 @@ export default {
           const _num = this.compress - 0
           const conversionType = _num > 1 ? 'compressAccurately' : 'compress'
           imageConversion[conversionType](file, _num).then((result) => {
-            // console.log('图片压缩')
             if (!this.onExceedSize(result.size, _maxSize)) {
               return false
             }
           })
         } else {
-          //   console.log('图片未开启')
           if (!this.onExceedSize(file.size, _maxSize)) {
             return false
           }
         }
       } else {
-        // console.log('不是图片')
         if (!this.onExceedSize(file.size, _maxSize)) {
           return false
         }
-      }
-      if (this.listType === 'idcard') {
-        this.isHidden = true
       }
     },
     onExceedSize(size, maxSize) {
@@ -293,39 +264,25 @@ export default {
       }
       return true
     },
-    onChange(file, fileList) {
-      // const arr = fileList.map((item) => {
-      //   if (item.response && item.response.code === 200) {
-      //     return item.response.data.url
-      //   } else if (item.url && item.status === 'success') {
-      //     return item.url
-      //   }
-      // })
-      // this.$emit('on-change', [...this.viewList.map(item => item.url), ...arr].join(','))
-      // console.log(arr)
-    },
-    // 回显上传资源
-    fileListViews(url) {
-      if (!url) return []
-      const arr = url.split(',').map((item) => ({ url: item, name: item }))
-      this.viewList = arr
-      this.$emit('update:fileList', arr)
-    },
     onSuccess(response, file, fileList) {
-      if (this.listType === 'idcard') {
-        this.isHidden = false
-      }
-
-      const arr = fileList.map((item) => {
-        if (item.response && item.response.code === 200) {
-          return item.response.data.url
+      var arr = []
+      fileList.forEach((item) => {
+        if (item.response && item.response.data) {
+          var obj = {}
+          obj.accessoryName = item.response.data.accessoryName
+          obj.accessorySize = item.response.data.accessorySize
+          obj.ext = item.response.data.ext
+          obj.imgFlag = item.response.data.imgFlag
+          obj.url = item.response.data.url
+          arr.push(obj)
+        } else {
+          arr.push(item)
         }
       })
-      this.$emit('update:fileList', fileList)
-      this.$emit('on-success', arr.join(','))
+
+      this.$emit('update:fileList', arr)
     },
     onError() {
-      //   console.log(err, file, fileList)
       this.$message.error('上传失败，请重试')
     },
     onSubmitUpload() {
@@ -345,14 +302,6 @@ export default {
       })
     },
     async handleDownload({ url }) {
-      // const response = await fetch(url) // 内容转变成blob地址
-      // const blob = await response.blob() // 创建隐藏的可下载链接
-      // const objectUrl = window.URL.createObjectURL(blob)
-      // const a = document.createElement('a')
-      // a.href = objectUrl
-      // a.download = 'name'
-      // a.click()
-      // a.remove()
       const elt = document.createElement('a')
       elt.setAttribute('href', url)
       elt.setAttribute('download', '下载文件')
@@ -376,7 +325,7 @@ export default {
         })
       }
       this.$emit('update:fileList', fileList)
-      this.$emit('on-change', fileList.map(item => item.url).join(','))
+      //   this.$emit('on-change', fileList.map(item => item.url).join(','))
     },
     closeViewer() {
       this.isShowImageView = false
@@ -412,6 +361,19 @@ export default {
 }
 .upload-slot {
   height: 100%;
+  .ext {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    z-index: 1000;
+    background: rgba($color: #000000, $alpha: 0.4);
+    height: 20px;
+    line-height: 20px;
+    color: #fff;
+    font-size: 12px;
+    padding: 0 5px;
+    border-radius: 0 0 0 0;
+  }
   &-idcard {
     width: 100%;
     height: 100%;
@@ -433,21 +395,29 @@ export default {
   flex-direction: column;
   box-sizing: border-box;
   padding: 10px 0;
-  .el-icon {
-    font-size: 18px;
+  .annex {
     color: #ccc;
+    display: flex;
+    align-items: center;
+    height: 20px;
+    line-height: 20px;
+    .el-icon {
+      font-size: 18px;
+    }
+    .label{
+        padding-left: 5px;
+    }
   }
   .file-name {
     line-height: 20px;
     font-size: 12px;
-    color: #363639;
-    padding: 0 10px;
-    margin-top: 5px;
+    color: #ccc;
+    padding: 0 6px;
     text-align: center;
     overflow: hidden;
     text-overflow: ellipsis;
     display: -webkit-box;
-    -webkit-line-clamp: 2; //行数
+    -webkit-line-clamp: 1; //行数
     -webkit-box-orient: vertical;
   }
 }
