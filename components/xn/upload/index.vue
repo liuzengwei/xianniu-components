@@ -390,7 +390,6 @@ export default {
 .tip-filename{
   line-height: 20px;
   font-size: 14px;
-  text-align: center;
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
