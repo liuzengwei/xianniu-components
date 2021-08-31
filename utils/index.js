@@ -19,7 +19,19 @@ export function deepClone(source) {
   })
   return targetObj
 }
-
+const isImg = (filePath) => {
+  if (typeof filePath !== 'string' || !filePath) return
+  var strFilter = '.jpeg|.gif|.jpg|.png|.bmp|.pic|.svg|'
+  if (filePath.indexOf('.') > -1) {
+    var p = filePath.lastIndexOf('.')
+    var strPostfix = filePath.substring(p, filePath.length) + '|'
+    strPostfix = strPostfix.toLowerCase()
+    if (strFilter.indexOf(strPostfix) > -1) {
+      return true
+    }
+  }
+  return false
+}
 
 // 字节格式化
 const bytesToSize = (bytes) => {
@@ -31,6 +43,7 @@ const bytesToSize = (bytes) => {
 }
 
 const tools = {
+  isImg,
   deepClone,
   bytesToSize,
 }
