@@ -7,7 +7,7 @@
             :key="index"
             style="width: 100px; height: 100px"
             fit="cover"
-            :src="item.url"
+            :src="item[urlKey]"
             class="user-avatar mr-10"
           >
             <div slot="error" class="image-slot el-icon-picture-outline" />
@@ -18,9 +18,9 @@
     <el-row :gutter="10">
       <el-col :span="24">
         <template v-for="(item, index) in previewFileList">
-          <a :key="index" :href="item.url" :download="item.accessoryName">
+          <a :key="index" :href="item[urlKey]" :download="item[nameKey]">
             <el-link :underline="false" class="mr-10">{{
-              item.accessoryName
+              item[nameKey]
             }}</el-link>
           </a>
         </template>
@@ -41,6 +41,16 @@ export default {
         return [];
       },
     },
+    urlKey: {
+      type: String,
+      require: false,
+      default: () => "url",
+    },
+    nameKey: {
+      type: String,
+      require: false,
+      default: () => "accessoryName",
+    },
   },
   data() {
     return {
@@ -51,7 +61,7 @@ export default {
   created() {
     if (this.fileList && this.fileList.length) {
       this.fileList.forEach((item) => {
-        const { url } = item;
+        const url = item[this.urlKey];
         if (tools.isImg(url)) {
           this.imageList.push(item);
         } else {
@@ -60,8 +70,6 @@ export default {
       });
     }
   },
-  mounted() {},
-  methods: {},
 };
 </script>
 
