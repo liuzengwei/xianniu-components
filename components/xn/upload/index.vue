@@ -36,10 +36,10 @@
         class="upload-slot"
         :class="{ 'upload-slot-idcard': listType === 'idcard' }"
       >
-        <el-popover width="200" trigger="hover">
+        <el-popover width="300" trigger="hover">
           <el-form label-width="80px" size="mini">
             <el-form-item label="文件名">
-              {{ file.accessoryName }}
+              <div class="tip-filename">{{ file.accessoryName }}</div>
             </el-form-item>
             <el-form-item label="文件大小">
               {{ tools.bytesToSize(file.accessorySize) }}
@@ -386,6 +386,16 @@ export default {
   .icon {
     margin-left: 5px;
   }
+}
+.tip-filename{
+  line-height: 20px;
+  font-size: 14px;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
 }
 .xn-upload-list__item--file {
   height: 100%;
