@@ -36,18 +36,22 @@
         class="upload-slot"
         :class="{ 'upload-slot-idcard': listType === 'idcard' }"
       >
-        <el-popover
-          width="200"
-          trigger="hover"
-        >
-          <div>
-            <div>文件名：{{ file.accessoryName }}</div>
-            <div>文件大小：{{ tools.bytesToSize(file.accessorySize) }}</div>
-            <div>文件格式：{{ file.ext }}</div>
-            <div>地址：{{ file.url }}</div>
-            <div>是否是图片：{{ file.imgFlag ? '图片' : '文件' }}</div>
-          </div>
-          <div v-if="file.ext" slot="reference" :title="file.accessoryName" class="ext">{{ file.ext }}</div>
+        <el-popover width="200" trigger="hover">
+          <el-form label-width="80px" size="mini">
+            <el-form-item label="文件名">
+              {{ file.accessoryName }}
+            </el-form-item>
+            <el-form-item label="文件大小">
+              {{ tools.bytesToSize(file.accessorySize) }}
+            </el-form-item>
+            <el-form-item label="文件格式">
+              {{ file.ext }}
+            </el-form-item>
+            <el-form-item label="文件类型">
+              {{ file.imgFlag ? "图片" : "文件" }}
+            </el-form-item>
+          </el-form>
+          <div v-if="file.ext" slot="reference" class="ext">{{ file.ext }}</div>
         </el-popover>
         <template v-if="isImage(file)">
           <el-image
@@ -111,227 +115,225 @@
 </template>
 
 <script>
-import ElImageViewer from 'element-ui/packages/image/src/image-viewer'
-import * as imageConversion from 'image-conversion'
-import domain from '@/env-config'
-import tools from '../../../utils'
+import ElImageViewer from "element-ui/packages/image/src/image-viewer";
+import * as imageConversion from "image-conversion";
+import domain from "@/env-config";
+import tools from "../../../utils";
 export default {
-  name: 'XnUploadnew',
+  name: "XnUploadnew",
   components: {
-    ElImageViewer
+    ElImageViewer,
   },
   props: {
     listType: {
       type: String,
-      default: 'picture-card'
+      default: "picture-card",
     },
     showFileList: {
       type: Boolean,
-      default: true
+      default: true,
     },
     hiddenUpload: {
       type: Boolean,
-      default: false
+      default: false,
     },
     fileList: {
       type: Array,
-      default: () => []
+      default: () => [],
     },
     disabled: Boolean,
     autoUpload: {
       type: Boolean,
-      default: true
+      default: true,
     },
     limit: {
       type: Number,
-      default: 1
+      default: 1,
     },
     tip: {
       type: String,
-      default: ''
+      default: "",
     },
     multiple: {
       type: Boolean,
-      default: true
+      default: true,
     },
     accept: {
       type: Array,
-      default: () => ['jpg', 'jpeg', 'png', 'pdf']
+      default: () => ["jpg", "jpeg", "png", "pdf"],
     },
     maxSize: {
       type: Number,
-      default: 1024 * 5 * 1024 // 最大限制 5M
+      default: 1024 * 5 * 1024, // 最大限制 5M
     },
     compress: {
       type: [Boolean, Number],
-      default: false
+      default: false,
     },
     type: {
       type: String,
-      default: 'front',
+      default: "front",
       validator: (val) => {
-        return ['front', 'back'].includes(val)
-      }
+        return ["front", "back"].includes(val);
+      },
     },
     styles: {
       type: Object,
-      default: () => {}
-    }
+      default: () => {},
+    },
   },
   data() {
     return {
       isShowImageView: false,
-      imageView: '',
+      imageView: "",
       isHidden: false,
       actionParams: {
-        action: `${domain.upload}/upload/uploadFile`
+        action: `${domain.upload}/upload/uploadFile`,
       },
       uploadHeaders: {
-        xnToken: this.$store.getters.token
+        xnToken: this.$store.getters.token,
       },
       viewList: [],
-      tools
-    }
+      tools,
+    };
   },
   computed: {
     process() {
       return (num) => {
-        return Math.floor(num)
-      }
+        return Math.floor(num);
+      };
     },
     isImage() {
       return (file) => {
-        return file.imgFlag
-      }
-    }
+        return file.imgFlag;
+      };
+    },
   },
   watch: {
     fileList: {
       handler(n) {
         if (this.limit === n.length) {
-          this.isHidden = true
+          this.isHidden = true;
         } else {
-          this.isHidden = false
+          this.isHidden = false;
         }
       },
-      immediate: true
-    }
+      immediate: true,
+    },
   },
   created() {},
   beforeDestroy() {
-    this.$emit('update:fileList', [])
+    this.$emit("update:fileList", []);
   },
   methods: {
     onProcess(process) {},
     onBeforeUpload(file) {
-      const _isImg = true
-      const fileExt = file.name.substring(file.name.lastIndexOf('.') + 1)
-      const _maxSize = parseFloat(this.maxSize)
+      const _isImg = true;
+      const fileExt = file.name.substring(file.name.lastIndexOf(".") + 1);
+      const _maxSize = parseFloat(this.maxSize);
 
       // 判断上传格式
-      file.fileExt = `.${fileExt}`.toLowerCase()
+      file.fileExt = `.${fileExt}`.toLowerCase();
       if (!this.accept.includes(fileExt)) {
-        this.$message.warning(`请上传指定格式【${this.accept}】`)
-        return false
+        this.$message.warning(`请上传指定格式【${this.accept}】`);
+        return false;
       }
       // 如果是图片 时候开启压缩
       if (_isImg) {
         if (this.compress) {
-          const _num = this.compress - 0
-          const conversionType = _num > 1 ? 'compressAccurately' : 'compress'
+          const _num = this.compress - 0;
+          const conversionType = _num > 1 ? "compressAccurately" : "compress";
           imageConversion[conversionType](file, _num).then((result) => {
             if (!this.onExceedSize(result.size, _maxSize)) {
-              return false
+              return false;
             }
-          })
+          });
         } else {
           if (!this.onExceedSize(file.size, _maxSize)) {
-            return false
+            return false;
           }
         }
       } else {
         if (!this.onExceedSize(file.size, _maxSize)) {
-          return false
+          return false;
         }
       }
     },
     onExceedSize(size, maxSize) {
       if (size > maxSize) {
-        this.$message.warning(
-          `最大不能超过${tools.bytesToSize(maxSize)}`
-        )
-        return false
+        this.$message.warning(`最大不能超过${tools.bytesToSize(maxSize)}`);
+        return false;
       }
-      return true
+      return true;
     },
     onSuccess(response, file, fileList) {
-      var arr = []
+      var arr = [];
       fileList.forEach((item) => {
         if (item.response && item.response.data) {
-          var obj = {}
-          obj.accessoryName = item.response.data.accessoryName
-          obj.accessorySize = item.response.data.accessorySize
-          obj.ext = item.response.data.ext
-          obj.imgFlag = item.response.data.imgFlag
-          obj.url = item.response.data.url
-          arr.push(obj)
+          var obj = {};
+          obj.accessoryName = item.response.data.accessoryName;
+          obj.accessorySize = item.response.data.accessorySize;
+          obj.ext = item.response.data.ext;
+          obj.imgFlag = item.response.data.imgFlag;
+          obj.url = item.response.data.url;
+          arr.push(obj);
         } else {
-          arr.push(item)
+          arr.push(item);
         }
-      })
+      });
 
-      this.$emit('update:fileList', arr)
+      this.$emit("update:fileList", arr);
     },
     onError() {
-      this.$message.error('上传失败，请重试')
+      this.$message.error("上传失败，请重试");
     },
     onSubmitUpload() {
-      this.$refs.upload.submit()
+      this.$refs.upload.submit();
     },
     onAbort() {
-      this.$refs.upload.abort()
+      this.$refs.upload.abort();
     },
 
     onExceed(file, fileList) {
-      this.$message.warning(`上传总数限制为【${this.limit}】个，请删除后上传`)
+      this.$message.warning(`上传总数限制为【${this.limit}】个，请删除后上传`);
     },
     handlePictureCardPreview(file) {
-      this.isShowImageView = true
+      this.isShowImageView = true;
       this.$nextTick(() => {
-        this.imageView = file.url
-      })
+        this.imageView = file.url;
+      });
     },
     async handleDownload({ url }) {
-      const elt = document.createElement('a')
-      elt.setAttribute('href', url)
-      elt.setAttribute('download', '下载文件')
-      elt.style.display = 'none'
-      elt.target = '_blank'
-      document.body.appendChild(elt)
-      elt.click()
-      document.body.removeChild(elt)
+      const elt = document.createElement("a");
+      elt.setAttribute("href", url);
+      elt.setAttribute("download", "下载文件");
+      elt.style.display = "none";
+      elt.target = "_blank";
+      document.body.appendChild(elt);
+      elt.click();
+      document.body.removeChild(elt);
     },
     handleRemove(file, fileList) {
       fileList.forEach((item, idx, arr) => {
         if (file.uid === item.uid) {
-          fileList.splice(idx, 1)
+          fileList.splice(idx, 1);
         }
-      })
+      });
       if (this.viewList.length) {
         this.viewList.forEach((item, idx, arr1) => {
           if (item.url === file.url) {
-            this.viewList.splice(idx, 1)
+            this.viewList.splice(idx, 1);
           }
-        })
+        });
       }
-      this.$emit('update:fileList', fileList)
+      this.$emit("update:fileList", fileList);
       //   this.$emit('on-change', fileList.map(item => item.url).join(','))
     },
     closeViewer() {
-      this.isShowImageView = false
-    }
-  }
-}
+      this.isShowImageView = false;
+    },
+  },
+};
 </script>
 
 <style scoped lang="scss">
@@ -404,8 +406,8 @@ export default {
     .el-icon {
       font-size: 18px;
     }
-    .label{
-        padding-left: 5px;
+    .label {
+      padding-left: 5px;
     }
   }
   .file-name {
