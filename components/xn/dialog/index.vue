@@ -56,7 +56,7 @@ export default {
     },
     width: {
       type: String,
-      default: '560px'
+      default: ''
     },
     show: {
       type: Boolean,
