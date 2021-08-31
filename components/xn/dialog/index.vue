@@ -3,7 +3,7 @@
     v-drag="drag"
     :title="title"
     :visible="show"
-    :width="width"
+    :width="width ? width : _width"
     :before-close="beforeClose"
     :show-close="false"
     :append-to-body="appendToBody"
@@ -12,9 +12,16 @@
     @opened="$emit('on-opened')"
   >
     <template #title>
-      <span class="el-dialog__title">{{ title }}</span>
-      <div class="el-dialog__headerbtn" @click="onClose">
-        <span class="el-dialog__close el-icon el-icon-close close" />
+      <div class="flex align-items-center justify-content-between">
+        <div>
+          <span class="el-dialog__title">{{ title }}</span>
+        </div>
+        <div>
+          <slot name="tools" />
+          <div class="el-dialog__headerbtn" @click="onClose">
+            <span class="el-dialog__close el-icon el-icon-close close" />
+          </div>
+        </div>
       </div>
     </template>
     <slot />
@@ -31,6 +38,7 @@
 </template>
 
 <script>
+// 320 560 720 960
 export default {
   name: 'XnDialog',
   props: {
@@ -48,7 +56,7 @@ export default {
     },
     width: {
       type: String,
-      default: '460px'
+      default: '560px'
     },
     show: {
       type: Boolean,
@@ -72,8 +80,29 @@ export default {
     },
     size: {
       type: String,
-      default: ''
+      default: 'small'
     }
+  },
+  computed: {
+    _width() {
+      const arr = [
+        { label: 'mini', value: '320px' },
+        { label: 'small', value: '560px' },
+        { label: 'medium', value: '720px' },
+        { label: 'large', value: '960px' }
+      ]
+
+      var width = ''
+      arr.forEach(item => {
+        if (item.label === this.size) {
+          width = item.value
+        }
+      })
+      return width
+    }
+  },
+  created() {
+    console.log(this.$slots)
   },
   methods: {
     onClose() {
@@ -87,12 +116,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.el-dialog__headerbtn:hover {
-  .close {
-    border-color: #ff745c;
-  }
-}
-.close {
-  border-radius: 4px;
-}
+
 </style>
