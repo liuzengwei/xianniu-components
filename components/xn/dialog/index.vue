@@ -101,9 +101,7 @@ export default {
       return width
     }
   },
-  created() {
-    console.log(this.$slots)
-  },
+
   methods: {
     onClose() {
       this.beforeClose()
