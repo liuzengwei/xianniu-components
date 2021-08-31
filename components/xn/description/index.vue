@@ -99,6 +99,7 @@ export default {
 
 <style scoped lang="scss">
 .desc {
+  width: 100%;
   &-header{
     padding: 10px;
     display: flex;
