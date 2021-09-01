@@ -6,6 +6,7 @@
       :data="data"
       :border="border"
       :stripe="stripe"
+      ref="table"
       :hover="hover"
       :max-height="autoHeight ? maxHeight : null"
       @selection-change="handleSelectionChange"
@@ -188,6 +189,12 @@ export default {
     handleClick(method, row, idx) {
       this.$emit("handle-buttons", { method, row, idx });
     },
+    toggleRowSelection(row,status){
+      this.$refs.table.toggleRowSelection(row,status)
+    },
+    clearSelection(){
+      this.$refs.table.clearSelection()
+    }
   },
 };
 </script>
