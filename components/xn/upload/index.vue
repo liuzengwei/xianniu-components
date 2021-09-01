@@ -23,7 +23,13 @@
       :on-exceed="onExceed"
     >
       <template v-if="listType === 'picture-card'">
-        <i slot="trigger" class="el-icon-plus" />
+        <div slot="trigger" class="upload-limit">
+          <i class="el-icon el-icon-plus" />
+          <span
+            ><em>{{ fileList.length }}</em
+            >/<em>{{ limit }}</em>
+          </span>
+        </div>
       </template>
       <template v-else>
         <slot>
@@ -359,6 +365,24 @@ export default {
     width: 52%;
   }
 }
+.upload-limit {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  span {
+    line-height: 20px;
+    position: absolute;
+    bottom: 8px;
+    color: #ccc;
+    em {
+      font-style: normal;
+      font-size: 12px;
+    }
+  }
+}
 .upload-slot {
   height: 100%;
   .ext {
@@ -387,7 +411,7 @@ export default {
     margin-left: 5px;
   }
 }
-.tip-filename{
+.tip-filename {
   line-height: 20px;
   font-size: 14px;
   overflow: hidden;
