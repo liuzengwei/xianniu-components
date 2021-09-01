@@ -7,7 +7,6 @@
       :border="border"
       :stripe="stripe"
       :hover="hover"
-      :row-key="rowKey"
       :max-height="autoHeight ? maxHeight : null"
       @selection-change="handleSelectionChange"
     >
@@ -78,9 +77,9 @@
     </el-table>
     <xn-page
       :hidden="showPage"
-      :total="pageQuery.total"
-      :page.sync="pageQuery.pageNum"
-      :limit.sync="pageQuery.pageSize"
+      :total="page.total"
+      :page.sync="page.pageNum"
+      :limit.sync="page.pageSize"
       @pagination="getList"
     />
   </div>
@@ -161,9 +160,15 @@ export default {
       type: String,
       default: "",
     },
-    pageQuery: {
+    page: {
       type: Object,
-      default: () => {},
+      default: () => {
+        return {
+          pageNum: 1,
+          pageSize: 15,
+          total: 0,
+        };
+      },
     },
   },
   data() {
