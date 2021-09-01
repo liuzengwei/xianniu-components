@@ -7,6 +7,7 @@
       :border="border"
       :stripe="stripe"
       :hover="hover"
+      :row-key="rowKey"
       :max-height="autoHeight ? maxHeight : null"
       @selection-change="handleSelectionChange"
     >
@@ -155,6 +156,14 @@ export default {
     autoHeight: {
       type: [Boolean, Number],
       default: -95,
+    },
+    rowKey: {
+      type: String,
+      default: "",
+    },
+    pageQuery: {
+      type: Object,
+      default: () => {},
     },
   },
   data() {
