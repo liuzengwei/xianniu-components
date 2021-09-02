@@ -155,7 +155,7 @@ export default {
       switch (this.type) {
         case "date":
           obj.format = "yyyy-MM-dd";
-          obj.valueFormat = "yyyy-MM-dd";
+          obj.valueFormat = "yyyy-MM-dd HH:mm:ss";
           break;
         case "week":
           obj.format = "yyyy 第 WW 周";
