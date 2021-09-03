@@ -1,5 +1,6 @@
 <template>
   <div class="xn-table-box">
+    <slot name="tools" />
     <el-table
       v-auto-height:maxHeight="autoHeight"
       class="xn-table"
@@ -26,7 +27,7 @@
       />
       <slot>
         <el-table-column
-          v-for="(item, idx) in columns"
+          v-for="(item, idx) in newColumns"
           :key="idx"
           :prop="item.prop"
           :label="item.label"
@@ -177,6 +178,15 @@ export default {
       maxHeight: 0,
     };
   },
+  computed: {
+    newColumns() {
+      return this.columns.filter((item) => {
+        return typeof item.show === "function"
+          ? item.show()
+          : item.show === undefined || item.show === true;
+      });
+    },
+  },
   methods: {
     handleSelectionChange(value) {
       this.$emit("on-selection", value);
@@ -189,12 +199,12 @@ export default {
     handleClick(method, row, idx) {
       this.$emit("handle-buttons", { method, row, idx });
     },
-    toggleRowSelection(row,status){
-      this.$refs.table.toggleRowSelection(row,status)
+    toggleRowSelection(row, status) {
+      this.$refs.table.toggleRowSelection(row, status);
     },
-    clearSelection(){
-      this.$refs.table.clearSelection()
-    }
+    clearSelection() {
+      this.$refs.table.clearSelection();
+    },
   },
 };
 </script>
