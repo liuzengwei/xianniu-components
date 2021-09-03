@@ -45,7 +45,7 @@
         <el-popover width="300" trigger="hover">
           <el-form label-width="80px" size="mini">
             <el-form-item label="文件名">
-              <div class="tip-filename">{{ file.accessoryName }}</div>
+              <div :title="file.accessoryName" class="tip-filename">{{ file.accessoryName }}</div>
             </el-form-item>
             <el-form-item label="文件大小">
               {{ tools.bytesToSize(file.accessorySize) }}
@@ -55,6 +55,9 @@
             </el-form-item>
             <el-form-item label="文件类型">
               {{ file.imgFlag ? "图片" : "文件" }}
+            </el-form-item>
+            <el-form-item label="操作">
+              <el-link type="primary" :underline="false" @click="handleDownload(file)" icon="el-icon-download">下载</el-link>
             </el-form-item>
           </el-form>
           <div v-if="file.ext" slot="reference" class="ext">{{ file.ext }}</div>
@@ -417,7 +420,7 @@ export default {
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
-  -webkit-line-clamp: 3;
+  -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
 }
 .xn-upload-list__item--file {
