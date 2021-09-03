@@ -12,7 +12,7 @@
     <div class="drawer-content">
       <slot />
     </div>
-    <div class="drawer-footer text-right">
+    <div class="drawer-footer" :class="`text-${align}`">
       <slot name="footer">
         <el-button @click="onClose">关闭</el-button>
       </slot>
@@ -22,28 +22,35 @@
 
 <script>
 export default {
-  name: 'XnDrawer',
+  name: "XnDrawer",
   props: {
     show: Boolean,
     title: {
       type: String,
-      default: ''
+      default: "",
     },
     size: {
       type: String,
-      default: '70%'
+      default: "70%",
     },
     beforeClose: {
       type: Function,
-      default: () => {}
-    }
+      default: () => {},
+    },
+    align: {
+      type: String,
+      default: "left",
+      validator: (val)=>{
+        return ['left','center','right'].includes(val)
+      }
+    },
   },
   methods: {
     onClose() {
-      this.beforeClose()
-    }
-  }
-}
+      this.beforeClose();
+    },
+  },
+};
 </script>
 
 <style scope lang="scss">
