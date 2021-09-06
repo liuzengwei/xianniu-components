@@ -1,5 +1,5 @@
 <template>
-  <div class="desc" :class="{ 'desc-border': border }" :style="{ margin }">
+  <div class="desc" :class="{ 'desc-border': border }">
     <div class="desc-header flex justify-content-between align-items-center">
       <h1 v-if="title" class="desc-title" v-html="title" />
       <div class="more" v-if="$slots.more">
@@ -32,10 +32,10 @@ export default {
     },
     border: Boolean,
     // 边距
-    margin: {
-      type: String,
-      default: "0",
-    },
+    // margin: {
+    //   type: String,
+    //   default: "0",
+    // },
     // label宽度
     labelWidth: {
       type: String,
