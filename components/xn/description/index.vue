@@ -1,6 +1,5 @@
 <template>
   <div class="desc" :class="{ 'desc-border': border }" :style="{ margin }">
-    <!-- 标题 -->
     <div class="desc-header flex justify-content-between align-items-center">
       <h1 v-if="title" class="desc-title" v-html="title" />
       <div class="more" v-if="$slots.more">
@@ -8,7 +7,7 @@
       </div>
     </div>
     <slot name="title" />
-    <el-row class="desc-row">
+    <el-row class="desc-row" :style="bodyStyle">
       <slot />
     </el-row>
   </div>
@@ -51,6 +50,14 @@ export default {
       // 大小
       type: String,
       default: "",
+    },
+    bodyStyle: {
+      type: Object,
+      default: () => {
+        return {
+          padding: "20px",
+        };
+      },
     },
   },
   watch: {
@@ -98,9 +105,12 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.desc + .desc {
+  margin-bottom: 20px;
+}
 .desc {
   width: 100%;
-  &-header{
+  &-header {
     padding: 10px;
     display: flex;
     border-bottom: 1px solid #e8eaec;
@@ -112,9 +122,8 @@ export default {
   background-color: #fff;
 
   .desc-title {
-    
     margin: 0;
-    
+
     color: #ff745c;
     font-weight: 700;
     font-size: 15px;
@@ -125,7 +134,6 @@ export default {
     flex-wrap: wrap;
     border-radius: 2px;
     width: 100%;
-    padding: 10px 0;
   }
 }
 </style>
