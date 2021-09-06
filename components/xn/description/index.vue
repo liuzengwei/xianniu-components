@@ -111,7 +111,7 @@ export default {
 .desc {
   width: 100%;
   &-header {
-    padding: 10px;
+    padding: 10px 20px;
     display: flex;
     border-bottom: 1px solid #e8eaec;
   }
@@ -123,7 +123,6 @@ export default {
 
   .desc-title {
     margin: 0;
-
     color: #ff745c;
     font-weight: 700;
     font-size: 15px;
