@@ -106,7 +106,7 @@ export default {
 
 <style scoped lang="scss">
 .desc + .desc {
-  margin-bottom: 20px;
+  margin-top: 20px;
 }
 .desc {
   width: 100%;
