@@ -133,7 +133,7 @@ export default {
     flex-wrap: wrap;
     border-radius: 2px;
     width: 100%;
-    & > :not([class*=" desc-item-"]){
+    & > :not([class*="desc-item"]){
       width: 100%;
     }
   }
