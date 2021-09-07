@@ -133,6 +133,9 @@ export default {
     flex-wrap: wrap;
     border-radius: 2px;
     width: 100%;
+    & > *:not(.desc-item) {
+      width: 100%;
+    }
   }
 }
 </style>
