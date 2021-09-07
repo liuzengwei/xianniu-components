@@ -8,8 +8,10 @@
             style="width: 100px; height: 100px"
             fit="cover"
             :src="item[urlKey]"
+            :preview-src-list="largerPreview?previewSrcList:[]"
             class="user-avatar mr-10"
           >
+          <pre>{{imageList}}</pre>
             <div slot="error" class="image-slot el-icon-picture-outline" />
           </el-image>
         </template>
@@ -51,10 +53,17 @@ export default {
       require: false,
       default: () => "accessoryName",
     },
+    /* 预览大图;默认可预览大图 */
+    largerPreview: {
+      type: Boolean,
+      require: false,
+      default: () => true,
+    },
   },
   data() {
     return {
       imageList: [],
+      previewSrcList: [],
       previewFileList: [],
     };
   },
@@ -64,6 +73,7 @@ export default {
         const url = item[this.urlKey];
         if (tools.isImg(url)) {
           this.imageList.push(item);
+          this.previewSrcList.push(url)
         } else {
           this.previewFileList.push(item);
         }
