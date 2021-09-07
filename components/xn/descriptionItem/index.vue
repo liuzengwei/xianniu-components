@@ -3,10 +3,10 @@
     <div class="desc-item-content" :class="size">
       <label
         class="desc-item-label"
-        :style="{ width: labelWidth }"
+        :style="{ width: labelWidth,...middleStyl }"
         v-html="label"
       />
-      <div class="desc-item-value">
+      <div class="desc-item-value" :style="middleStyl">
         <slot></slot>
       </div>
     </div>
@@ -16,7 +16,7 @@
 <script>
 export default {
   name: "XnDescriptionItem",
-  inject: ["labelWidth", "column", "size"],
+  inject: ["labelWidth", "column", "size","middle"],
   props: {
     span: {
       type: [Number, String],
@@ -36,6 +36,11 @@ export default {
     };
   },
   computed: {
+    middleStyl(){
+      return this.middle ? {
+        'align-items':'center'
+      } : {}
+    },
     isTrue(){
       return JSON.stringify(this.$slots) === '{}'
     },
