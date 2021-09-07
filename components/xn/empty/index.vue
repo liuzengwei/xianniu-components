@@ -14,7 +14,7 @@ export default {
     },
     image: {
       type: String,
-      default: "el-icon-box",
+      default: "",
     },
     desc: {
       type: String,
