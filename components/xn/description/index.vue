@@ -1,6 +1,9 @@
 <template>
   <div class="desc" :class="{ 'desc-border': border }">
-    <div class="desc-header flex justify-content-between align-items-center">
+    <div
+      v-if="title || $slots.more"
+      class="desc-header flex justify-content-between align-items-center"
+    >
       <h1 v-if="title" class="desc-title" v-html="title" />
       <div class="more" v-if="$slots.more">
         <slot name="more"></slot>
@@ -21,6 +24,7 @@ export default {
       labelWidth: this.labelWidth,
       column: this.column,
       size: this.size,
+      middle: this.middle,
     };
   },
   props: {
@@ -58,6 +62,10 @@ export default {
           padding: "20px",
         };
       },
+    },
+    middle: {
+      type: Boolean,
+      default: true,
     },
   },
   watch: {
@@ -133,6 +141,9 @@ export default {
     flex-wrap: wrap;
     border-radius: 2px;
     width: 100%;
+    & > :not([class*="desc-item"]) {
+      width: 100%;
+    }
   }
 }
 </style>

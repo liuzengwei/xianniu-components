@@ -1,6 +1,10 @@
 {
   "name": "xianniu-components",
+<<<<<<< HEAD
   "version": "1.0.51",
+=======
+  "version": "1.0.49",
+>>>>>>> 43e027bc800e4fac232e26cb6f40c297133a7507
   "description": "一些业务组件",
   "main": "index.js",
   "scripts": {

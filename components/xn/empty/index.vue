@@ -1,43 +1,29 @@
 <template>
   <div class="xn-empty">
-    <div class="xn-empty__icon">
-      <i :class="icon" />
-    </div>
-    <div class="xn-empty__text">
-      <span><slot>{{ text }}</slot></span>
-      <div class="more">
-        <slot name="more" />
-      </div>
-    </div>
+    <el-empty :image-size="size" :description="desc" :image="image"></el-empty>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'XnEmpty',
+  name: "XnEmpty",
   props: {
-    icon: {
-      type: String,
-      default: 'el-icon-box'
+    size: {
+      type: Number,
+      default: 80,
     },
-    text: {
+    image: {
       type: String,
-      default: '暂无数据'
-    }
-  }
-}
+      default: "",
+    },
+    desc: {
+      type: String,
+      default: "暂无数据",
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>
-.xn-empty{
-    color: rgba(0,0,0,.25);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    margin: 32px 0;
-    &__icon{
-        font-size:38px
-    }
-}
+
 </style>
