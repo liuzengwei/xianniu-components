@@ -9,6 +9,7 @@
       :clearable="clearable"
       :picker-options="pickerOptions"
       :default-time="'00:00:00'"
+      @change="handle"
       placeholder="请选择日期"
     />
   </div>
@@ -95,7 +96,18 @@ export default {
         }
       }
     }
-  }
+  },
+  methods: {
+      handle() {
+          if(this.isHistory){
+              return
+          }
+       let startAt = new Date(this.search[this.fieldName]) * 1000 /1000;
+        if(startAt < Date.now()) {
+            this.search[this.fieldName] = new Date();
+        }
+      }
+  },
 }
 </script>
 
