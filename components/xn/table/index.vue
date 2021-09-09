@@ -4,6 +4,7 @@
     <el-table
       v-auto-height:maxHeight="autoHeight"
       class="xn-table"
+      :class="{ 'disabled-all-selection': max > 0 }"
       :data="data"
       :border="border"
       :stripe="stripe"
@@ -162,6 +163,10 @@ export default {
       type: String,
       default: "",
     },
+    max: {
+      type: Number,
+      default: 0,
+    },
     page: {
       type: Object,
       default: () => {
@@ -176,6 +181,7 @@ export default {
   data() {
     return {
       maxHeight: 0,
+      selectedList: [],
     };
   },
   computed: {
@@ -189,12 +195,19 @@ export default {
   },
   methods: {
     handleSelectionChange(value) {
+      this.selectedList = value;
       this.$emit("on-selection", value);
     },
     // 处理是否可以选中
     handleSelect(row, index) {
-      console.log(row,index);
-      return true;
+      const check = this.selectedList.find((v) => {
+        return v.id == row.id;
+      });
+      if (!check && this.selectedList.length === this.max && this.max > 0) {
+        return 0;
+      } else {
+        return 1;
+      }
     },
     // 点击按钮
     handleClick(method, row, idx) {
@@ -232,5 +245,10 @@ export default {
   /*滚动条里面轨道*/
   border-radius: 10px;
   background: rgba(255, 255, 255, 0.5);
+}
+.xn-table.disabled-all-selection {
+  .el-table__header-wrapper .el-checkbox {
+    display: none;
+  }
 }
 </style>

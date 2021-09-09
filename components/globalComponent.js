@@ -1,5 +1,4 @@
 import Vue from 'vue' // 引入vue
-
 /*
  * /^(?!.*(?:_|private|test.vue$)).*\.vue$/
  * 过滤不需要全局注册的组件
@@ -26,6 +25,5 @@ requireComponent.keys().forEach(fileName => {
 
   const name = toHump(rename.replace('/index', ''))
 
-  // console.log(name)
   Vue.component(name, config.default || config) // 动态注册该目录下的所有.vue文件
 })
