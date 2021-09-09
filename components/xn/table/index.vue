@@ -17,7 +17,7 @@
         width="50px"
         type="selection"
         :fixed="selectionFixed"
-        :selectable="selectInit"
+        :selectable="handleSelect"
       />
       <el-table-column
         v-if="index && data.length"
@@ -192,7 +192,8 @@ export default {
       this.$emit("on-selection", value);
     },
     // 处理是否可以选中
-    selectInit(row, index) {
+    handleSelect(row, index) {
+      console.log(row,index);
       return true;
     },
     // 点击按钮
