@@ -10,6 +10,7 @@
       :stripe="stripe"
       ref="table"
       :hover="hover"
+      :row-key="rowKey"
       :max-height="autoHeight ? maxHeight : null"
       @selection-change="handleSelectionChange"
     >
@@ -18,6 +19,7 @@
         width="50px"
         type="selection"
         :fixed="selectionFixed"
+        :reserve-selection="reserveSelection"
         :selectable="handleSelect"
       />
       <el-table-column
@@ -166,6 +168,10 @@ export default {
     max: {
       type: Number,
       default: 0,
+    },
+    reserveSelection:{
+      type:Boolean,
+      default:false
     },
     page: {
       type: Object,
