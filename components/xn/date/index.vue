@@ -86,7 +86,7 @@ export default {
       type: [String, Array],
       default: "00:00:00",
     },
-    isDisableBefore: {
+    isDisabledBefore: {
       type: Boolean,
       default: false,
     },
@@ -95,7 +95,7 @@ export default {
     return {
       pickerOptionsDate: {
         disabledDate: (time) => {
-          return this.isDisableBefore
+          return this.isDisabledBefore
             ? time.getTime() < Date.now() - 1 * 24 * 3600 * 1000
             : false;
         },
@@ -165,7 +165,7 @@ export default {
       if (this.isShortcut) {
         obj = Object.assign(obj, this.pickerOptionsPlug);
       }
-      if (this.isDisableBefore) {
+      if (this.isDisabledBefore) {
         obj = Object.assign(obj, this.pickerOptionsDate);
       }
       return obj;
