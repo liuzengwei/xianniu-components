@@ -168,7 +168,6 @@ export default {
       if (this.isDisableBefore) {
         obj = Object.assign(obj, this.pickerOptionsDate);
       }
-      console.log(obj);
       return obj;
     },
     styles() {
