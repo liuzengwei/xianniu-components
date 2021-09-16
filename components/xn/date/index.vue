@@ -10,6 +10,7 @@
     :format="format ? format : _format.format"
     :value-format="valueFormat ? valueFormat : _format.valueFormat"
     :style="styles"
+    :default-time="defaultTime"
     :disabled="disabled"
     :readonly="readonly"
     :clearable="clearable"
@@ -81,6 +82,10 @@ export default {
       type: String,
       default: "结束日期",
     },
+    defaultTime:{
+      type:[String,Array],
+      default:''
+    }
   },
   data() {
     return {
