@@ -220,14 +220,12 @@ export default {
     },
     isRange() {
       return (type) => {
-        console.log(type);
         return ["datetimerange", "daterange", "monthrange"].includes(type);
       };
     },
   },
   methods: {
     onChange(value) {
-      console.log(value);
       if (
         this.type === "datetimerange" ||
         this.type === "daterange" ||
