@@ -84,7 +84,7 @@ export default {
     },
     defaultTime: {
       type: [String, Array],
-      default: "00:00:00",
+      default: null,
     },
     isDisabledBefore: {
       type: Boolean,
@@ -220,12 +220,14 @@ export default {
     },
     isRange() {
       return (type) => {
+        console.log(type);
         return ["datetimerange", "daterange", "monthrange"].includes(type);
       };
     },
   },
   methods: {
     onChange(value) {
+      console.log(value);
       if (
         this.type === "datetimerange" ||
         this.type === "daterange" ||

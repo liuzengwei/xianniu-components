@@ -4,7 +4,7 @@
     <el-table
       v-auto-height:maxHeight="autoHeight"
       class="xn-table"
-      :class="{ 'disabled-all-selection': max > 0 }"
+      :class="{ 'disabled-all-selection': disabledAllSelection }"
       :data="data"
       :border="border"
       :stripe="stripe"
@@ -169,9 +169,9 @@ export default {
       type: Number,
       default: 0,
     },
-    reserveSelection:{
-      type:Boolean,
-      default:false
+    reserveSelection: {
+      type: Boolean,
+      default: false,
     },
     page: {
       type: Object,
@@ -188,9 +188,13 @@ export default {
     return {
       maxHeight: 0,
       selectedList: [],
+      disabledAll:false
     };
   },
   computed: {
+    disabledAllSelection(){
+      return this.max>0 || this.disabledAll
+    },
     newColumns() {
       return this.columns.filter((item) => {
         return typeof item.show === "function"
@@ -206,13 +210,20 @@ export default {
     },
     // 处理是否可以选中
     handleSelect(row, index) {
-      const check = this.selectedList.find((v) => {
-        return v.id == row.id;
-      });
-      if (!check && this.selectedList.length === this.max && this.max > 0) {
+      if (row.isDisabled) {
+        // if(!this.disabledAll){
+        //   this.disabledAll = true
+        // }
         return 0;
       } else {
-        return 1;
+        const check = this.selectedList.find((v) => {
+          return v.id == row.id;
+        });
+        if (!check && this.selectedList.length === this.max && this.max > 0) {
+          return 0;
+        } else {
+          return 1;
+        }
       }
     },
     // 点击按钮
