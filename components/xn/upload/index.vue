@@ -3,8 +3,9 @@
     <el-upload
       ref="upload"
       :class="{
-        'hide-upload': hiddenUpload || isHidden || disabled,
+        'hide-upload': hiddenUpload || isHidden,
         'el-upload-idcard': listType === 'idcard',
+        'xn-upload-disabled': disabled,
       }"
       :action="actionParams.action"
       :auto-upload="autoUpload"
@@ -45,7 +46,9 @@
         <el-popover width="300" trigger="hover">
           <el-form label-width="80px" size="mini">
             <el-form-item label="文件名">
-              <div :title="file.accessoryName" class="tip-filename">{{ file.accessoryName }}</div>
+              <div :title="file.accessoryName" class="tip-filename">
+                {{ file.accessoryName }}
+              </div>
             </el-form-item>
             <el-form-item label="文件大小">
               {{ tools.bytesToSize(file.accessorySize) }}
@@ -57,7 +60,13 @@
               {{ file.imgFlag ? "图片" : "文件" }}
             </el-form-item>
             <el-form-item label="操作">
-              <el-link type="primary" :underline="false" @click="handleDownload(file)" icon="el-icon-download">下载</el-link>
+              <el-link
+                type="primary"
+                :underline="false"
+                @click="handleDownload(file)"
+                icon="el-icon-download"
+                >下载</el-link
+              >
             </el-form-item>
           </el-form>
           <div v-if="file.ext" slot="reference" class="ext">{{ file.ext }}</div>
@@ -342,8 +351,27 @@ export default {
   },
 };
 </script>
-
+<style lang="scss">
+</style>
 <style scoped lang="scss">
+.xn-upload-box {
+  .xn-upload-disabled {
+    ::v-deep .el-upload.el-upload--picture-card {
+      cursor: not-allowed;
+      background-color: #f4f4f5;
+      &:hover {
+        border-color: #c0ccda;
+        color: #c0ccda;
+      }
+      .upload-limit {
+        i,
+        span {
+          color: #bcbec2;
+        }
+      }
+    }
+  }
+}
 .process {
   position: absolute;
   left: 0;
@@ -368,6 +396,7 @@ export default {
     width: 52%;
   }
 }
+
 .upload-limit {
   display: flex;
   height: 100%;
