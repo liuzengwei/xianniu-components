@@ -3,7 +3,7 @@
     <el-upload
       ref="upload"
       :class="{
-        'hide-upload': hiddenUpload || isHidden,
+        'hide-upload': hiddenUpload || isHidden || preview,
         'el-upload-idcard': listType === 'idcard',
         'xn-upload-disabled': disabled,
       }"
@@ -150,6 +150,10 @@ export default {
       default: true,
     },
     hiddenUpload: {
+      type: Boolean,
+      default: false,
+    },
+    preview:{
       type: Boolean,
       default: false,
     },
