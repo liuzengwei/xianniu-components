@@ -299,6 +299,8 @@ export default {
       });
 
       this.$emit("update:fileList", arr);
+      this.$emit("on-success", arr);
+
     },
     onError() {
       this.$message.error("上传失败，请重试");
