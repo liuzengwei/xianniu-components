@@ -1,11 +1,19 @@
 {
-  "name": "xianniu-components",
+  "name": "@liuzengwei/xianniu-components",
   "version": "1.0.64",
   "description": "一些业务组件",
-  "main": "index.js",
+  "main": "./dist/component-library-gao.common.js",
+  "private": false,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build-bundle": "vue-cli-service build --target lib --name xianniu-components1 ./src/components/index.js"
   },
+  "files": [
+    "dist/*",
+    "src/*",
+    "public/*",
+    "*.json",
+    "*.js"
+  ],
   "keywords": [
     "xianniu"
   ],
