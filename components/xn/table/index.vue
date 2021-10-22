@@ -236,6 +236,9 @@ export default {
     clearSelection() {
       this.$refs.table.clearSelection();
     },
+    doLayout(){
+      this.$refs.table.doLayout()
+    }
   },
 };
 </script>

@@ -111,7 +111,7 @@
             <i class="fz-16 el-icon-download" />
           </span>
           <span
-            v-if="!disabled"
+            v-if="!disabled && !preview"
             class="el-upload-list__item-delete icon"
             @click="handleRemove(file, fileList)"
           >
