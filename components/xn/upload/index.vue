@@ -7,7 +7,7 @@
         'el-upload-idcard': listType === 'idcard',
         'xn-upload-disabled': disabled,
       }"
-      :action="actionParams.action"
+      action="###"
       :auto-upload="autoUpload"
       :on-progress="onProcess"
       :show-file-list="showFileList"
@@ -16,12 +16,13 @@
       :limit="limit"
       :disabled="disabled"
       :file-list.sync="fileList"
-      :on-success="onSuccess"
+      :http-request="onHttpUpload"
       :on-error="onError"
       :before-upload="onBeforeUpload"
       :style="styles"
       :headers="uploadHeaders"
       :on-exceed="onExceed"
+      :on-change="onChange"
     >
       <template v-if="listType === 'picture-card'">
         <div slot="trigger" class="upload-limit">
@@ -135,6 +136,7 @@ import ElImageViewer from "element-ui/packages/image/src/image-viewer";
 import * as imageConversion from "image-conversion";
 import domain from "@/env-config";
 import tools from "../../../utils";
+import axios from "axios";
 export default {
   name: "XnUploadnew",
   components: {
@@ -153,7 +155,7 @@ export default {
       type: Boolean,
       default: false,
     },
-    preview:{
+    preview: {
       type: Boolean,
       default: false,
     },
@@ -215,6 +217,8 @@ export default {
       },
       viewList: [],
       tools,
+      files: [],
+      successFiles: []
     };
   },
   computed: {
@@ -286,26 +290,69 @@ export default {
       }
       return true;
     },
-    onSuccess(response, file, fileList) {
-      var arr = [];
-      fileList.forEach((item) => {
-        if (item.response && item.response.data) {
-          var obj = {};
-          obj.accessoryName = item.response.data.accessoryName;
-          obj.accessorySize = item.response.data.accessorySize;
-          obj.ext = item.response.data.ext;
-          obj.imgFlag = item.response.data.imgFlag;
-          obj.url = item.response.data.url;
-          arr.push(obj);
-        } else {
-          arr.push(item);
-        }
-      });
-
-      this.$emit("update:fileList", arr);
-      this.$emit("on-success", arr);
-
+    onChange(file, fileList) {
+      this.files = fileList;
     },
+    onHttpUpload(file) {
+      const formData = new FormData();
+      formData.append("file", file.file);
+      axios({
+        method: "post",
+        url: this.actionParams.action,
+        data: formData,
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        onUploadProgress(progress) {
+          const _progress = Math.round(
+            (progress.loaded / progress.total) * 100
+          );
+          console.log(progress);
+          console.log(file);
+
+            file.onProgress({ percent: _progress });
+        },
+      })
+        .then((res) => {
+          var obj = {};
+          obj.accessoryName = res.data.data.accessoryName;
+          obj.accessorySize = res.data.data.accessorySize;
+          obj.ext = res.data.data.ext;
+          obj.imgFlag = res.data.data.imgFlag;
+          obj.url = res.data.data.url;
+          this.successFiles.push(obj);
+          file.onSuccess();
+          
+          if (this.files.length === this.successFiles.length) {
+            this.$emit("update:fileList", this.successFiles);
+            this.$emit("on-success", this.successFiles);
+          }
+        })
+        .catch((err) => {
+          this.$emit("update:fileList", this.successFiles);
+          file.onError();
+        });
+    },
+    // onSuccess(response, file, fileList) {
+    //   var arr = [];
+    //   fileList.forEach((item) => {
+    //     if (item.response && item.response.data) {
+    //       var obj = {};
+    //       obj.accessoryName = item.response.data.accessoryName;
+    //       obj.accessorySize = item.response.data.accessorySize;
+    //       obj.ext = item.response.data.ext;
+    //       obj.imgFlag = item.response.data.imgFlag;
+    //       obj.url = item.response.data.url;
+    //       arr.push(obj);
+    //     } else {
+    //       arr.push(item);
+    //     }
+    //   });
+
+    //   this.$emit("update:fileList", arr);
+    //   this.$emit("on-success", arr);
+
+    // },
     onError() {
       this.$message.error("上传失败，请重试");
     },
@@ -394,6 +441,7 @@ export default {
     }
     ::v-deep .el-progress__text {
       color: #fff;
+      font-size: 12px !important;
     }
   }
 }
