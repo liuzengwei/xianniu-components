@@ -6,10 +6,11 @@
     :placeholder="placeholder"
     :start-placeholder="startPlaceholder"
     :end-placeholder="endPlaceholder"
-    :picker-options="isShortcut ? pickerOptionsPlug : {}"
+    :picker-options="pickerOpts"
     :format="format ? format : _format.format"
     :value-format="valueFormat ? valueFormat : _format.valueFormat"
     :style="styles"
+    :default-time="defaultTime"
     :disabled="disabled"
     :readonly="readonly"
     :clearable="clearable"
@@ -81,9 +82,24 @@ export default {
       type: String,
       default: "结束日期",
     },
+    defaultTime: {
+      type: [String, Array],
+      default: null,
+    },
+    isDisabledBefore: {
+      type: Boolean,
+      default: false,
+    },
   },
   data() {
     return {
+      pickerOptionsDate: {
+        disabledDate: (time) => {
+          return this.isDisabledBefore
+            ? time.getTime() < Date.now() - 1 * 24 * 3600 * 1000
+            : false;
+        },
+      },
       pickerOptionsPlug: {
         shortcuts: [
           {
@@ -144,6 +160,16 @@ export default {
     };
   },
   computed: {
+    pickerOpts() {
+      var obj = {};
+      if (this.isShortcut) {
+        obj = Object.assign(obj, this.pickerOptionsPlug);
+      }
+      if (this.isDisabledBefore) {
+        obj = Object.assign(obj, this.pickerOptionsDate);
+      }
+      return obj;
+    },
     styles() {
       const _isRange = this.isRange(this.type);
       return {

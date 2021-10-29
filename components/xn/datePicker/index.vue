@@ -102,10 +102,12 @@ export default {
       if (this.isHistory) {
         return;
       }
+      /* 判断不能选择今天 */
       let startAt = (new Date(this.search[this.fieldName]) * 1000) / 1000;
       if (startAt < Date.now()) {
+          let time = this.gtToday?new Date(new Date().setHours(0, 0, 0, 0) + 24 * 60 * 60 * 1000 ):new Date()
         this.search[this.fieldName] = this.dateFormat(
-          new Date(),
+          time,
           this.valueFormat
         );
       }

@@ -65,7 +65,7 @@ export default {
     },
     middle: {
       type: Boolean,
-      default: true,
+      default: false,
     },
   },
   watch: {

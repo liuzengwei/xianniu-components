@@ -4,11 +4,13 @@
     <el-table
       v-auto-height:maxHeight="autoHeight"
       class="xn-table"
+      :class="{ 'disabled-all-selection': disabledAllSelection }"
       :data="data"
       :border="border"
       :stripe="stripe"
       ref="table"
       :hover="hover"
+      :row-key="rowKey"
       :max-height="autoHeight ? maxHeight : null"
       @selection-change="handleSelectionChange"
     >
@@ -17,7 +19,8 @@
         width="50px"
         type="selection"
         :fixed="selectionFixed"
-        :selectable="selectInit"
+        :reserve-selection="reserveSelection"
+        :selectable="handleSelect"
       />
       <el-table-column
         v-if="index && data.length"
@@ -162,6 +165,14 @@ export default {
       type: String,
       default: "",
     },
+    max: {
+      type: Number,
+      default: 0,
+    },
+    reserveSelection: {
+      type: Boolean,
+      default: false,
+    },
     page: {
       type: Object,
       default: () => {
@@ -176,9 +187,14 @@ export default {
   data() {
     return {
       maxHeight: 0,
+      selectedList: [],
+      disabledAll:false
     };
   },
   computed: {
+    disabledAllSelection(){
+      return this.max>0 || this.disabledAll
+    },
     newColumns() {
       return this.columns.filter((item) => {
         return typeof item.show === "function"
@@ -189,11 +205,26 @@ export default {
   },
   methods: {
     handleSelectionChange(value) {
+      this.selectedList = value;
       this.$emit("on-selection", value);
     },
     // 处理是否可以选中
-    selectInit(row, index) {
-      return true;
+    handleSelect(row, index) {
+      if (row.isDisabled) {
+        // if(!this.disabledAll){
+        //   this.disabledAll = true
+        // }
+        return 0;
+      } else {
+        const check = this.selectedList.find((v) => {
+          return v.id == row.id;
+        });
+        if (!check && this.selectedList.length === this.max && this.max > 0) {
+          return 0;
+        } else {
+          return 1;
+        }
+      }
     },
     // 点击按钮
     handleClick(method, row, idx) {
@@ -205,6 +236,9 @@ export default {
     clearSelection() {
       this.$refs.table.clearSelection();
     },
+    doLayout(){
+      this.$refs.table.doLayout()
+    }
   },
 };
 </script>
@@ -231,5 +265,10 @@ export default {
   /*滚动条里面轨道*/
   border-radius: 10px;
   background: rgba(255, 255, 255, 0.5);
+}
+.xn-table.disabled-all-selection {
+  .el-table__header-wrapper .el-checkbox {
+    display: none;
+  }
 }
 </style>
