@@ -218,7 +218,7 @@ export default {
       viewList: [],
       tools,
       files: [],
-      successFiles: []
+      successFiles: [],
     };
   },
   computed: {
@@ -236,6 +236,7 @@ export default {
   watch: {
     fileList: {
       handler(n) {
+        this.successFiles = n
         if (this.limit === n.length) {
           this.isHidden = true;
         } else {
@@ -307,10 +308,7 @@ export default {
           const _progress = Math.round(
             (progress.loaded / progress.total) * 100
           );
-          console.log(progress);
-          console.log(file);
-
-            file.onProgress({ percent: _progress });
+          file.onProgress({ percent: _progress });
         },
       })
         .then((res) => {
@@ -322,11 +320,13 @@ export default {
           obj.url = res.data.data.url;
           this.successFiles.push(obj);
           file.onSuccess();
-          
-          if (this.files.length === this.successFiles.length) {
-            this.$emit("update:fileList", this.successFiles);
-            this.$emit("on-success", this.successFiles);
-          }
+          // if (
+          //   this.files.length  ===
+          //   this.successFiles.length +this.fileList.length
+          // ) {
+          //   }
+          this.$emit("update:fileList", this.successFiles);
+          this.$emit("on-success", this.successFiles);
         })
         .catch((err) => {
           this.$emit("update:fileList", this.successFiles);
