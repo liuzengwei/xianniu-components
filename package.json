@@ -1,0 +1,20 @@
+{
+  "name": "xianniu-components",
+  "version": "2.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/liuzengwei/xianniu-components.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/liuzengwei/xianniu-components/issues"
+  },
+  "homepage": "https://github.com/liuzengwei/xianniu-components#readme"
+}
