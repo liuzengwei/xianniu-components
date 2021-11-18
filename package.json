@@ -1,17 +1,17 @@
 {
   "name": "xianniu-components",
   "version": "2.0.0",
-  "description": "",
+  "description": "一些业务组件",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/liuzengwei/xianniu-components.git"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": ["xianniu","components"],
+  "author": "liuzengwei",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/liuzengwei/xianniu-components/issues"
