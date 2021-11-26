@@ -23,6 +23,7 @@
   "homepage": "https://github.com/liuzengwei/xianniu-components#readme",
   "devDependencies": {
     "@babel/core": "^7.16.0",
+    "babel-eslint": "^10.1.0",
     "babel-loader": "^8.2.3",
     "copy-webpack-plugin": "^10.0.0",
     "cross-env": "^7.0.3",
