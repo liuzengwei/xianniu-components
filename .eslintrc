@@ -16,10 +16,7 @@
     ],
     "quotes": [
       2,
-      "single",
-      {
-        "singleQuote": true
-      }
+      "nerver"
     ],
     "comma-dangle": [
       2,
