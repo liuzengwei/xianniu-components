@@ -1,15 +1,15 @@
 /**
  * webpack 公共配置，比如 externals、alias
  */
- var path = require('path')
- var fs = require('fs')
- var nodeExternals = require('webpack-node-externals')
+var path = require('path')
+// var fs = require('fs')
+var nodeExternals = require('webpack-node-externals')
 //  var Components = require('../components.json')
- 
+
 //  var utilsList = fs.readdirSync(path.resolve(__dirname, '../src/utils'))
 //  var mixinsList = fs.readdirSync(path.resolve(__dirname, '../src/mixins'))
 //  var transitionList = fs.readdirSync(path.resolve(__dirname, '../src/transitions'))
- /**
+/**
    * externals 解决组件依赖其它组件并按需引入时代码冗余的问题
    *     比如 Table 组件依赖 Checkbox 组件，在项目中如果我同时引入 Table 和 Checkbox 时，会不会产生冗余代码
    *     如果没有以下内容的的话，会，这时候你会看到有两份 Checkbox 组件代码。
@@ -20,8 +20,8 @@
    *     这么处理之后就不会出现冗余的 JS 代码，但是对于 CSS 部分，element-ui 并未处理冗余情况。
    *     可以看到 /lib/theme-chalk/table.css 和 /lib/theme-chalk/checkbox.css 中都有 Checkbox 组件的样式
    */
- var externals = {}
- 
+var externals = {}
+
 //  Object.keys(Components).forEach(function(key) {
 //    externals[`demoui/packages/${key}`] = `demoui/lib/${key}`
 //  })
@@ -37,26 +37,26 @@
 //    file = path.basename(file, '.js')
 //    externals[`demoui/src/transitions/${file}`] = `demoui/lib/transitions/${file}`
 //  })
- 
- externals = [Object.assign({
-   vue: 'vue'
- }, externals), nodeExternals()]
- 
- exports.externals = externals
- 
- // 设置别名，方便使用
- exports.alias = {
-   main: path.resolve(__dirname, '../src'),
-   packages: path.resolve(__dirname, '../packages'),
-   examples: path.resolve(__dirname, '../examples')
- }
- 
- exports.vue = {
-   root: 'Vue',
-   commonjs: 'vue',
-   commonjs2: 'vue',
-   amd: 'vue'
- }
- 
- exports.jsexclude = /node_modules|utils\/popper\.js|utils\/date\.js/
- 
+
+externals = [Object.assign({
+  vue: 'vue'
+}, externals), nodeExternals()]
+
+exports.externals = externals
+
+// 设置别名，方便使用
+exports.alias = {
+  main: path.resolve(__dirname, '../src'),
+  packages: path.resolve(__dirname, '../packages'),
+  examples: path.resolve(__dirname, '../examples')
+}
+
+exports.vue = {
+  root: 'Vue',
+  commonjs: 'vue',
+  commonjs2: 'vue',
+  amd: 'vue'
+}
+
+exports.jsexclude = /node_modules|utils\/popper\.js|utils\/date\.js/
+

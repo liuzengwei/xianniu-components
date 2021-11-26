@@ -1,18 +1,18 @@
 // 官网的 webpack 配置
-const path = require('path');
-const webpack = require('webpack');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const ProgressBarPlugin = require('progress-bar-webpack-plugin');
-const VueLoaderPlugin = require('vue-loader/lib/plugin');
-const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const path = require('path')
+const webpack = require('webpack')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+// const CopyWebpackPlugin = require('copy-webpack-plugin')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+const ProgressBarPlugin = require('progress-bar-webpack-plugin')
+const VueLoaderPlugin = require('vue-loader/lib/plugin')
+const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 
-const config = require('./config');
+const config = require('./config')
 
-const isProd = process.env.NODE_ENV === 'production';
-const isPlay = !!process.env.PLAY_ENV;
+const isProd = process.env.NODE_ENV === 'production'
+const isPlay = !!process.env.PLAY_ENV
 
 const webpackConfig = {
   mode: process.env.NODE_ENV,
@@ -20,7 +20,7 @@ const webpackConfig = {
     docs: './examples/entry.js'
   } : (isPlay ? './examples/play.js' : './examples/entry.js'),
   output: {
-    path: path.resolve(process.cwd(), './examples/element-ui/'),
+    path: path.resolve(process.cwd(), './examples/asd/'),
     publicPath: process.env.CI_ENV || '',
     filename: '[name].[hash:7].js',
     chunkFilename: isProd ? '[name].[hash:7].js' : '[name].js'
@@ -127,19 +127,19 @@ const webpackConfig = {
     minimizer: []
   },
   devtool: '#eval-source-map'
-};
+}
 
 if (isProd) {
   webpackConfig.externals = {
     vue: 'Vue',
     'vue-router': 'VueRouter',
     'highlight.js': 'hljs'
-  };
+  }
   webpackConfig.plugins.push(
     new MiniCssExtractPlugin({
       filename: '[name].[contenthash:7].css'
     })
-  );
+  )
   webpackConfig.optimization.minimizer.push(
     new UglifyJsPlugin({
       cache: true,
@@ -147,7 +147,7 @@ if (isProd) {
       sourceMap: false
     }),
     new OptimizeCSSAssetsPlugin({})
-  );
+  )
   // https://webpack.js.org/configuration/optimization/#optimizationsplitchunks
   //   webpackConfig.optimization.splitChunks = {
   //     cacheGroups: {
@@ -158,7 +158,7 @@ if (isProd) {
   //       }
   //     }
   //   };
-  webpackConfig.devtool = false;
+  webpackConfig.devtool = false
 }
 
-module.exports = webpackConfig;
+module.exports = webpackConfig

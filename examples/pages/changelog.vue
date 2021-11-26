@@ -1,12 +1,13 @@
 <template>
-  <div>hello</div>
+  <div>changelog</div>
 </template>
 
 <script>
 export default {
-  name: "XnTable",
-};
+
+}
 </script>
 
 <style>
+
 </style>

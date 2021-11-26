@@ -1,6 +1,9 @@
 <template>
   <div>
-    <div>头部</div>
+    <div>
+      头部
+      <main-header />
+    </div>
     <router-view />
     <div>底部</div>
   </div>
@@ -8,8 +11,10 @@
 
 <script>
 export default {
-  name: '123'
-}
+  name: "123",
+  created(){
+  }
+};
 </script>
 
 <style>
