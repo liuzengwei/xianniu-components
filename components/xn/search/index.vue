@@ -44,13 +44,14 @@
           :type="item.type || 'daterange'"
           :is-shortcut="showShortcut(item)"
           :placeholder="item.placeholder"
-          :startPlaceholder="
-            item.options && item.options.startPlaceholder
-          "
-          :endPlaceholder="
-            item.options && item.options.endPlaceholder
-          "
+          :startPlaceholder="item.options && item.options.startPlaceholder"
+          :endPlaceholder="item.options && item.options.endPlaceholder"
           :clearable="item.clearable || true"
+          :default-time="
+            isRange(item.type) && item.defaultTime == undefined
+              ? ['00:00:00', '23:59:59']
+              : item.defaultTime
+          "
           @on-change="onChangeDate"
           @on-format="onChangeDateFormat"
         />
@@ -95,10 +96,15 @@ export default {
         ].includes(type);
       };
     },
+    isRange() {
+      return (type) => {
+        return ["datetimerange", "daterange", "monthrange"].includes(type);
+      };
+    },
     showShortcut() {
       return (item) => {
         let flag = "";
-        if (item.type.indexOf("range") > -1) {
+        if (this.isRange(item.type)) {
           flag = item.options.isShortcut;
         } else {
           flag = false;
@@ -130,7 +136,7 @@ export default {
         this.formData.forEach((item, index) => {
           const key = item.prop;
           const value = this.form.value[index].modelVal;
-          if (this.isDate(item.type)) {
+          if (this.isRange(item.type)) {
             if (
               item.options &&
               item.options.start &&
@@ -141,7 +147,6 @@ export default {
               formValue[item.options.end] = value[1] || "";
             }
           } else {
-            console.log(formValue[key]);
             formValue[key] = value;
           }
         });

@@ -1,12 +1,16 @@
 <template>
   <div class="xn-table-box">
+    <slot name="tools" />
     <el-table
       v-auto-height:maxHeight="autoHeight"
       class="xn-table"
+      :class="{ 'disabled-all-selection': disabledAllSelection }"
       :data="data"
       :border="border"
       :stripe="stripe"
+      ref="table"
       :hover="hover"
+      :row-key="rowKey"
       :max-height="autoHeight ? maxHeight : null"
       @selection-change="handleSelectionChange"
     >
@@ -15,7 +19,8 @@
         width="50px"
         type="selection"
         :fixed="selectionFixed"
-        :selectable="selectInit"
+        :reserve-selection="reserveSelection"
+        :selectable="handleSelect"
       />
       <el-table-column
         v-if="index && data.length"
@@ -25,7 +30,7 @@
       />
       <slot>
         <el-table-column
-          v-for="(item, idx) in columns"
+          v-for="(item, idx) in newColumns"
           :key="idx"
           :prop="item.prop"
           :label="item.label"
@@ -62,7 +67,11 @@
                     :icon="itemBtn.icon"
                     :plain="itemBtn.plain"
                     @click="handleClick(itemBtn.methods, row, $index)"
-                    >{{ itemBtn.label }}</el-button
+                    >{{
+                      typeof itemBtn.label === "function"
+                        ? itemBtn.label(row)
+                        : itemBtn.label
+                    }}</el-button
                   >
                 </template>
               </template>
@@ -73,9 +82,9 @@
     </el-table>
     <xn-page
       :hidden="showPage"
-      :total="pageQuery.total"
-      :page.sync="pageQuery.pageNum"
-      :limit.sync="pageQuery.pageSize"
+      :total="page.total"
+      :page.sync="page.pageNum"
+      :limit.sync="page.pageSize"
       @pagination="getList"
     />
   </div>
@@ -152,24 +161,84 @@ export default {
       type: [Boolean, Number],
       default: -95,
     },
+    rowKey: {
+      type: String,
+      default: "",
+    },
+    max: {
+      type: Number,
+      default: 0,
+    },
+    reserveSelection: {
+      type: Boolean,
+      default: false,
+    },
+    page: {
+      type: Object,
+      default: () => {
+        return {
+          pageNum: 1,
+          pageSize: 15,
+          total: 0,
+        };
+      },
+    },
   },
   data() {
     return {
       maxHeight: 0,
+      selectedList: [],
+      disabledAll:false
     };
+  },
+  computed: {
+    disabledAllSelection(){
+      return this.max>0 || this.disabledAll
+    },
+    newColumns() {
+      return this.columns.filter((item) => {
+        return typeof item.show === "function"
+          ? item.show()
+          : item.show === undefined || item.show === true;
+      });
+    },
   },
   methods: {
     handleSelectionChange(value) {
+      this.selectedList = value;
       this.$emit("on-selection", value);
     },
     // 处理是否可以选中
-    selectInit(row, index) {
-      return true;
+    handleSelect(row, index) {
+      if (row.isDisabled) {
+        // if(!this.disabledAll){
+        //   this.disabledAll = true
+        // }
+        return 0;
+      } else {
+        const check = this.selectedList.find((v) => {
+          return v.id == row.id;
+        });
+        if (!check && this.selectedList.length === this.max && this.max > 0) {
+          return 0;
+        } else {
+          return 1;
+        }
+      }
     },
     // 点击按钮
     handleClick(method, row, idx) {
       this.$emit("handle-buttons", { method, row, idx });
     },
+    toggleRowSelection(row, status) {
+      this.$refs.table.toggleRowSelection(row, status);
+    },
+    clearSelection() {
+      this.$refs.table.clearSelection();
+    },
+    doLayout(){
+      this.$refs.table.doLayout()
+    }
   },
 };
 </script>
@@ -196,5 +265,10 @@ export default {
   /*滚动条里面轨道*/
   border-radius: 10px;
   background: rgba(255, 255, 255, 0.5);
+}
+.xn-table.disabled-all-selection {
+  .el-table__header-wrapper .el-checkbox {
+    display: none;
+  }
 }
 </style>

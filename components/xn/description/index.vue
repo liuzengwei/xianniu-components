@@ -1,14 +1,16 @@
 <template>
-  <div class="desc" :class="{ 'desc-border': border }" :style="{ margin }">
-    <!-- 标题 -->
-    <div class="desc-header flex justify-content-between align-items-center">
+  <div class="desc" :class="{ 'desc-border': border }">
+    <div
+      v-if="title || $slots.more"
+      class="desc-header flex justify-content-between align-items-center"
+    >
       <h1 v-if="title" class="desc-title" v-html="title" />
       <div class="more" v-if="$slots.more">
         <slot name="more"></slot>
       </div>
     </div>
     <slot name="title" />
-    <el-row class="desc-row">
+    <el-row class="desc-row" :style="bodyStyle">
       <slot />
     </el-row>
   </div>
@@ -22,6 +24,7 @@ export default {
       labelWidth: this.labelWidth,
       column: this.column,
       size: this.size,
+      middle: this.middle,
     };
   },
   props: {
@@ -33,10 +36,10 @@ export default {
     },
     border: Boolean,
     // 边距
-    margin: {
-      type: String,
-      default: "0",
-    },
+    // margin: {
+    //   type: String,
+    //   default: "0",
+    // },
     // label宽度
     labelWidth: {
       type: String,
@@ -51,6 +54,18 @@ export default {
       // 大小
       type: String,
       default: "",
+    },
+    bodyStyle: {
+      type: Object,
+      default: () => {
+        return {
+          padding: "20px",
+        };
+      },
+    },
+    middle: {
+      type: Boolean,
+      default: false,
     },
   },
   watch: {
@@ -98,9 +113,13 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.desc + .desc {
+  margin-top: 20px;
+}
 .desc {
-  &-header{
-    padding: 10px;
+  width: 100%;
+  &-header {
+    padding: 10px 20px;
     display: flex;
     border-bottom: 1px solid #e8eaec;
   }
@@ -111,9 +130,7 @@ export default {
   background-color: #fff;
 
   .desc-title {
-    
     margin: 0;
-    
     color: #ff745c;
     font-weight: 700;
     font-size: 15px;
@@ -124,7 +141,9 @@ export default {
     flex-wrap: wrap;
     border-radius: 2px;
     width: 100%;
-    padding: 10px 0;
+    & > :not([class*="desc-item"]) {
+      width: 100%;
+    }
   }
 }
 </style>
