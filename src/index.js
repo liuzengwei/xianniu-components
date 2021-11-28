@@ -14,5 +14,6 @@ if (typeof window !== 'undefined' && window.Vue) {
 }
 
 export default {
-  XnTable
+  XnTable,
+  install
 }
