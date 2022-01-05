@@ -13,6 +13,7 @@
   "license": "ISC",
   "dependencies": {
     "axios": "^0.24.0",
-    "image-conversion": "^2.1.1"
+    "image-conversion": "^2.1.1",
+    "xianniu-citys": "^1.1.1"
   }
 }
