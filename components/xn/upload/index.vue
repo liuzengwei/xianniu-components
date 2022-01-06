@@ -136,7 +136,7 @@ import ElImageViewer from "element-ui/packages/image/src/image-viewer";
 import * as imageConversion from "image-conversion";
 import domain from "@/env-config";
 import tools from "../../../utils";
-import axios from "axios";
+// import axios from "axios";
 export default {
   name: "XnUploadnew",
   components: {
@@ -253,7 +253,6 @@ export default {
   methods: {
     onProcess(process) {},
     onBeforeUpload(file) {
-      console.log(file);
       const _isImg = tools.isImg(file.name);
       const fileExt = file.name.substring(file.name.lastIndexOf(".") + 1);
       const _maxSize = parseFloat(this.maxSize);
@@ -266,9 +265,8 @@ export default {
       }
       this.resultBlob = null;
       // 如果是图片 时候开启压缩
-      console.log('_isImg',_isImg);
       if (_isImg) {
-        if (this.compress) {
+        if (this.compress>0) {
           const _num = this.compress - 0;
           const conversionType = _num > 1 ? "compressAccurately" : "compress";
           imageConversion[conversionType](file, _num).then((result) => {
@@ -338,26 +336,7 @@ export default {
           file.onError();
         });
     },
-    // onSuccess(response, file, fileList) {
-    //   var arr = [];
-    //   fileList.forEach((item) => {
-    //     if (item.response && item.response.data) {
-    //       var obj = {};
-    //       obj.accessoryName = item.response.data.accessoryName;
-    //       obj.accessorySize = item.response.data.accessorySize;
-    //       obj.ext = item.response.data.ext;
-    //       obj.imgFlag = item.response.data.imgFlag;
-    //       obj.url = item.response.data.url;
-    //       arr.push(obj);
-    //     } else {
-    //       arr.push(item);
-    //     }
-    //   });
-
-    //   this.$emit("update:fileList", arr);
-    //   this.$emit("on-success", arr);
-
-    // },
+    
     onError() {
       this.$message.error("上传失败，请重试");
     },
