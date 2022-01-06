@@ -1,6 +1,6 @@
 {
   "name": "xianniu-components",
-  "version": "1.0.69",
+  "version": "1.0.70",
   "description": "一些业务组件",
   "main": "index.js",
   "scripts": {
