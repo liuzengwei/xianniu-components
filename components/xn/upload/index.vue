@@ -236,7 +236,7 @@ export default {
   watch: {
     fileList: {
       handler(n) {
-        this.successFiles = n
+        this.successFiles = n;
         if (this.limit === n.length) {
           this.isHidden = true;
         } else {
@@ -253,7 +253,7 @@ export default {
   methods: {
     onProcess(process) {},
     onBeforeUpload(file) {
-      const _isImg = true;
+      const _isImg = tools.isImg(file.name);
       const fileExt = file.name.substring(file.name.lastIndexOf(".") + 1);
       const _maxSize = parseFloat(this.maxSize);
 
@@ -263,6 +263,7 @@ export default {
         this.$message.warning(`请上传指定格式【${this.accept}】`);
         return false;
       }
+      this.resultBlob = null;
       // 如果是图片 时候开启压缩
       if (_isImg) {
         if (this.compress) {
@@ -272,6 +273,7 @@ export default {
             if (!this.onExceedSize(result.size, _maxSize)) {
               return false;
             }
+            this.resultBlob = result;
           });
         } else {
           if (!this.onExceedSize(file.size, _maxSize)) {
@@ -296,7 +298,8 @@ export default {
     },
     onHttpUpload(file) {
       const formData = new FormData();
-      formData.append("file", file.file);
+      const _file = this.resultBlob ? dataURItoBlob(this.resultBlob) : file.file;
+      formData.append("file", _file);
       axios({
         method: "post",
         url: this.actionParams.action,
