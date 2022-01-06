@@ -136,7 +136,7 @@ import ElImageViewer from "element-ui/packages/image/src/image-viewer";
 import * as imageConversion from "image-conversion";
 import domain from "@/env-config";
 import tools from "../../../utils";
-// import axios from "axios";
+import axios from "axios";
 export default {
   name: "XnUploadnew",
   components: {
