@@ -253,6 +253,7 @@ export default {
   methods: {
     onProcess(process) {},
     onBeforeUpload(file) {
+      console.log(file);
       const _isImg = tools.isImg(file.name);
       const fileExt = file.name.substring(file.name.lastIndexOf(".") + 1);
       const _maxSize = parseFloat(this.maxSize);
@@ -265,6 +266,7 @@ export default {
       }
       this.resultBlob = null;
       // 如果是图片 时候开启压缩
+      console.log('_isImg',_isImg);
       if (_isImg) {
         if (this.compress) {
           const _num = this.compress - 0;
