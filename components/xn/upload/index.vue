@@ -189,8 +189,8 @@ export default {
       default: 1024 * 5 * 1024, // 最大限制 5M
     },
     compress: {
-      type: [Boolean, Number],
-      default: false,
+      type: Number,
+      default: 0,
     },
     type: {
       type: String,
@@ -253,9 +253,7 @@ export default {
   methods: {
     onProcess(process) {},
     onBeforeUpload(file) {
-      const _isImg = tools.isImg(file.name);
       const fileExt = file.name.substring(file.name.lastIndexOf(".") + 1);
-      const _maxSize = parseFloat(this.maxSize);
 
       // 判断上传格式
       file.fileExt = `.${fileExt}`.toLowerCase();
@@ -263,28 +261,23 @@ export default {
         this.$message.warning(`请上传指定格式【${this.accept}】`);
         return false;
       }
-      this.resultBlob = null;
-      // 如果是图片 时候开启压缩
-      if (_isImg) {
-        if (this.compress>0) {
-          const _num = this.compress - 0;
-          const conversionType = _num > 1 ? "compressAccurately" : "compress";
-          imageConversion[conversionType](file, _num).then((result) => {
-            if (!this.onExceedSize(result.size, _maxSize)) {
-              return false;
-            }
-            this.resultBlob = result;
-          });
-        } else {
-          if (!this.onExceedSize(file.size, _maxSize)) {
-            return false;
-          }
-        }
+    },
+    handleCompress(file) {
+      const { compress } = this;
+      const _maxSize = parseFloat(this.maxSize);
+      let size = 0;
+      if (compress) {
+        size = compress;
       } else {
-        if (!this.onExceedSize(file.size, _maxSize)) {
-          return false;
+        if (file.size > _maxSize) {
+          size = _maxSize / 1024;
         }
       }
+      return new Promise((resolve) => {
+        imageConversion["compressAccurately"](file, size).then((result) => {
+          resolve(result);
+        });
+      });
     },
     onExceedSize(size, maxSize) {
       if (size > maxSize) {
@@ -296,9 +289,16 @@ export default {
     onChange(file, fileList) {
       this.files = fileList;
     },
-    onHttpUpload(file) {
+    async onHttpUpload(file) {
       const formData = new FormData();
-      const _file = this.resultBlob ? dataURItoBlob(this.resultBlob) : file.file;
+      let result = null;
+      if (tools.isImg(file.file.name)) {
+        result = await this.handleCompress(file.file);
+        var newFile = new window.File([result], file.file.name, {
+          type: file.file.type,
+        });
+      }
+      const _file = result ? newFile : file.file;
       formData.append("file", _file);
       axios({
         method: "post",
@@ -323,11 +323,6 @@ export default {
           obj.url = res.data.data.url;
           this.successFiles.push(obj);
           file.onSuccess();
-          // if (
-          //   this.files.length  ===
-          //   this.successFiles.length +this.fileList.length
-          // ) {
-          //   }
           this.$emit("update:fileList", this.successFiles);
           this.$emit("on-success", this.successFiles);
         })
@@ -336,7 +331,7 @@ export default {
           file.onError();
         });
     },
-    
+
     onError() {
       this.$message.error("上传失败，请重试");
     },
