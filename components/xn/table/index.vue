@@ -2,13 +2,13 @@
   <div class="xn-table-box">
     <slot name="tools" />
     <el-table
+      ref="table"
       v-auto-height:maxHeight="autoHeight"
       class="xn-table"
       :class="{ 'disabled-all-selection': disabledAllSelection }"
       :data="data"
       :border="border"
       :stripe="stripe"
-      ref="table"
       :hover="hover"
       :row-key="rowKey"
       :max-height="autoHeight ? maxHeight : null"
@@ -92,7 +92,7 @@
 
 <script>
 export default {
-  name: "XnTable",
+  name: "XnTable1",
   components: {
     expandDom: {
       functional: true,
@@ -125,7 +125,7 @@ export default {
       default: true,
     },
     selection: {
-      type: Boolean,
+      type: [Function, Boolean],
       default: false,
     },
     data: {
@@ -188,12 +188,12 @@ export default {
     return {
       maxHeight: 0,
       selectedList: [],
-      disabledAll:false
+      disabledAll: false,
     };
   },
   computed: {
-    disabledAllSelection(){
-      return this.max>0 || this.disabledAll
+    disabledAllSelection() {
+      return this.max > 0 || this.disabledAll;
     },
     newColumns() {
       return this.columns.filter((item) => {
@@ -210,19 +210,21 @@ export default {
     },
     // 处理是否可以选中
     handleSelect(row, index) {
-      if (row.isDisabled) {
-        // if(!this.disabledAll){
-        //   this.disabledAll = true
-        // }
-        return 0;
+      if (this.selection && typeof this.selection === "function") {
+        return this.selection(row);
       } else {
-        const check = this.selectedList.find((v) => {
-          return v.id == row.id;
-        });
-        if (!check && this.selectedList.length === this.max && this.max > 0) {
+        if (row.isDisabled) {
           return 0;
         } else {
-          return 1;
+          const check = this.selectedList.find((v) => {
+            // eslint-disable-next-line eqeqeq
+            return v.id == row.id;
+          });
+          if (!check && this.selectedList.length === this.max && this.max > 0) {
+            return 0;
+          } else {
+            return 1;
+          }
         }
       }
     },
@@ -236,9 +238,9 @@ export default {
     clearSelection() {
       this.$refs.table.clearSelection();
     },
-    doLayout(){
-      this.$refs.table.doLayout()
-    }
+    doLayout() {
+      this.$refs.table.doLayout();
+    },
   },
 };
 </script>
