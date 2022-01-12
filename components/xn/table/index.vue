@@ -85,6 +85,7 @@
       :total="page.total"
       :page.sync="page.pageNum"
       :limit.sync="page.pageSize"
+      v-bind="$attrs"
       @pagination="getList"
     />
   </div>
