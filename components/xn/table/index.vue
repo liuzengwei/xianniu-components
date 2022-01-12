@@ -81,7 +81,6 @@
       </slot>
     </el-table>
     <xn-page
-      :hidden="showPage"
       :total="page.total"
       :page.sync="page.pageNum"
       :limit.sync="page.pageSize"
