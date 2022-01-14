@@ -13,6 +13,7 @@
       :row-key="rowKey"
       :max-height="autoHeight ? maxHeight : null"
       @selection-change="handleSelectionChange"
+      @sort-change="handleSortChange"
     >
       <el-table-column
         v-if="selection && data.length"
@@ -241,6 +242,9 @@ export default {
     doLayout() {
       this.$refs.table.doLayout();
     },
+    handleSortChange({ column, prop, order }) {
+      this.$emit('on-sort-change', { column, prop, order })
+    }
   },
 };
 </script>
