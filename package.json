@@ -1,6 +1,6 @@
 {
   "name": "xianniu-components",
-  "version": "1.0.67",
+  "version": "1.0.77",
   "description": "一些业务组件",
   "main": "index.js",
   "scripts": {
@@ -13,6 +13,7 @@
   "license": "ISC",
   "dependencies": {
     "axios": "^0.24.0",
-    "image-conversion": "^2.1.1"
+    "image-conversion": "^2.1.1",
+    "xianniu-citys": "^1.1.1"
   }
 }
