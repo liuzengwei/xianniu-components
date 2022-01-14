@@ -82,6 +82,7 @@
       </slot>
     </el-table>
     <xn-page
+      :hidden="!showPage"
       :total="page.total"
       :page.sync="page.pageNum"
       :limit.sync="page.pageSize"
@@ -156,7 +157,7 @@ export default {
     },
     showPage: {
       type: [Boolean, String],
-      default: "auto",
+      default: true,
     },
     autoHeight: {
       type: [Boolean, Number],
@@ -243,7 +244,7 @@ export default {
       this.$refs.table.doLayout();
     },
     handleSortChange({ column, prop, order }) {
-      this.$emit('on-sort-change', { column, prop, order })
+        this.$emit('on-sort-change', { column, prop, order })
     }
   },
 };

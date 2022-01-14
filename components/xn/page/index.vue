@@ -1,5 +1,5 @@
 <template>
-  <div class="pagination-container">
+  <div class="pagination-container" :class="{'hidden':hidden}">
     <el-pagination
       :small="isSmall"
       :background="background"
@@ -56,7 +56,7 @@ export default {
     },
     hidden: {
       type: [Boolean, String],
-      default: "auto",
+      default: false,
     },
   },
   computed: {
