@@ -185,6 +185,10 @@ export default {
         };
       },
     },
+    selectable: {
+      type: [Object, Function],
+      default: null,
+    },
   },
   data() {
     return {
@@ -212,8 +216,8 @@ export default {
     },
     // 处理是否可以选中
     handleSelect(row, index) {
-      if (this.selection && typeof this.selection === "function") {
-        return this.selection(row);
+      if (this.selectable && typeof this.selectable === "function") {
+        return this.selectable(row);
       } else {
         if (row.isDisabled) {
           return 0;
@@ -244,8 +248,8 @@ export default {
       this.$refs.table.doLayout();
     },
     handleSortChange({ column, prop, order }) {
-        this.$emit('on-sort-change', { column, prop, order })
-    }
+      this.$emit("on-sort-change", { column, prop, order });
+    },
   },
 };
 </script>
