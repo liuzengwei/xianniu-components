@@ -253,10 +253,11 @@ export default {
   methods: {
     onProcess(process) {},
     onBeforeUpload(file) {
-      const fileExt = file.name.substring(file.name.lastIndexOf(".") + 1);
+      let fileExt = file.name.substring(file.name.lastIndexOf(".") + 1);
 
       // 判断上传格式
-      file.fileExt = `.${fileExt}`.toLowerCase();
+      fileExt = `${fileExt}`.toLowerCase();
+
       if (!this.accept.includes(fileExt)) {
         this.$message.warning(`请上传指定格式【${this.accept}】`);
         return false;
