@@ -6,6 +6,7 @@
       :current-page.sync="currentPage"
       :page-size.sync="pageSize"
       :layout="smallLayout"
+      :page-sizes="pageSizes"
       :total="total"
       v-bind="$attrs"
       @size-change="handleSizeChange"
