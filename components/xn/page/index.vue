@@ -40,12 +40,12 @@ export default {
     pageSizes: {
       type: Array,
       default() {
-        return [15, 20, 30, 50];
+        return [10, 15, 20, 30, 50];
       },
     },
     layout: {
       type: String,
-      default: "sizes, total, prev, pager, next, jumper",
+      default: "total, prev, pager, next, jumper",
     },
     background: {
       type: Boolean,
