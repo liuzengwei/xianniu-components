@@ -8,7 +8,7 @@
         :prop="item.prop"
       >
         <xn-city
-          :data-level="item.options?.dataLevel || 2"
+          :data-level="item?.options?.dataLevel || 2"
           v-model="form.value[idx].modelVal"
           @on-city="handleChangeCity"
         />
