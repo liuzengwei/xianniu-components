@@ -2,6 +2,38 @@
   <el-form ref="form" inline :model="form" :label-width="labelWidth">
     <template v-for="(item, idx) in formData">
       <el-form-item
+        v-if="item.type === 'city'"
+        :key="idx"
+        :label="item.label"
+        :prop="item.prop"
+      >
+        <xn-city
+          :data-level="item.options.dataLevel || 2"
+          v-model="form.value[idx].modelVal"
+          @on-city="handleChangeCity"
+        />
+      </el-form-item>
+      <el-form-item
+        v-if="item.type === 'inputgroup'"
+        :key="idx"
+        :label="item.label"
+        :prop="item.prop"
+      >
+        <div class="input-group">
+          <el-input
+            v-model="form.value[idx].modelVal"
+            :clearable="item.clearable || true"
+            :placeholder="item.placeholder"
+          />
+          <span>-</span>
+          <el-input
+            v-model="form.value[idx].modelVal"
+            :clearable="item.clearable || true"
+            :placeholder="item.placeholder"
+          />
+        </div>
+      </el-form-item>
+      <el-form-item
         v-if="item.type === 'input'"
         :key="idx"
         :label="item.label"
@@ -116,6 +148,7 @@ export default {
   },
   data() {
     return {
+      city:{},
       form: {
         value: [],
       },
@@ -146,6 +179,9 @@ export default {
               formValue[item.options.start] = value[0] || "";
               formValue[item.options.end] = value[1] || "";
             }
+          } else if (item.type === "city") {
+            formValue[item.options.cityCode || "regionCode"] = this.city.cityCode
+            formValue[item.options.cityName || "regionName"] = this.city.regionName
           } else {
             formValue[key] = value;
           }
@@ -163,6 +199,9 @@ export default {
       });
       this.$emit("on-reset");
       this.$emit("on-search", {});
+    },
+    handleChangeCity(val) {
+      console.log(val);
     },
     onChangeDate(val) {
       // console.log(val);
