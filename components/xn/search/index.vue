@@ -8,7 +8,7 @@
         :prop="item.prop"
       >
         <xn-city
-          :data-level="item.options&&item.options.dataLevel || 2"
+          :data-level="item?.options?.dataLevel || 2"
           v-model="form.value[idx].modelVal"
           @on-city="handleChangeCity"
         />
@@ -180,8 +180,8 @@ export default {
               formValue[item.options.end] = value[1] || "";
             }
           } else if (item.type === "city") {
-            formValue[item.options.cityCode || "regionCode"] = this.city.cityCode
-            formValue[item.options.cityName || "regionName"] = this.city.regionName
+            formValue[item?.options?.cityCode || "regionCode"] = this?.city?.cityCode
+            formValue[item?.options?.cityName || "regionName"] = this?.city?.regionName
           } else {
             formValue[key] = value;
           }
@@ -201,7 +201,7 @@ export default {
       this.$emit("on-search", {});
     },
     handleChangeCity(val) {
-      console.log(val);
+      this.city = val
     },
     onChangeDate(val) {
       // console.log(val);
