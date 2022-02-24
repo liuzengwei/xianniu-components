@@ -77,7 +77,7 @@
             class="el-upload-list__item-thumbnail"
             :src="file.url"
             fit="cover"
-            :lazy="true"
+            :lazy="lazy"
           />
         </template>
         <template v-else>
@@ -143,6 +143,10 @@ export default {
     ElImageViewer,
   },
   props: {
+    lazy:{
+      type: Boolean,
+      default: true,
+    },
     listType: {
       type: String,
       default: "picture-card",
