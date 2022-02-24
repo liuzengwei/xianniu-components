@@ -215,6 +215,7 @@ export default {
       const cityName = this.handleTreeLabel(cityCode, this.cityList)
       const city = this.handleTreeLabel(cityCode, this.cityList, 2)
       const cityCodeLast = cityCode[cityCode.length - 1]
+      const cityNameLast = cityName[cityName.length - 1]
       let value = ''
       if (this.valueKey) {
         value = city[city.length - 1]
@@ -226,7 +227,8 @@ export default {
         city,
         cityCode,
         cityName,
-        cityCodeLast
+        cityCodeLast,
+        cityNameLast
       })
     },
     /**
