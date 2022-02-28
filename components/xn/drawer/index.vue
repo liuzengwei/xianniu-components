@@ -6,6 +6,7 @@
     :size="size"
     custom-class="drawer-body"
     :before-close="beforeClose"
+    v-bind="$attrs"
     @open="$emit('on-open')"
     @opened="$emit('on-opened')"
   >
