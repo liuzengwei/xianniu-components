@@ -252,7 +252,7 @@ export default {
   },
   created() {},
   beforeDestroy() {
-    this.$emit("update:fileList", []);
+    // this.$emit("update:fileList", []);
   },
   methods: {
     onProcess(process) {},
