@@ -11,7 +11,7 @@
       :stripe="stripe"
       :hover="hover"
       :row-key="rowKey"
-      v-bind="$attr"
+      v-bind="$attrs"
       :max-height="autoHeight ? maxHeight : null"
       @selection-change="handleSelectionChange"
       @sort-change="handleSortChange"
