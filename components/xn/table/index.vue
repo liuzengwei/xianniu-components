@@ -11,6 +11,7 @@
       :stripe="stripe"
       :hover="hover"
       :row-key="rowKey"
+      v-bind="$attr"
       :max-height="autoHeight ? maxHeight : null"
       @selection-change="handleSelectionChange"
       @sort-change="handleSortChange"
@@ -38,6 +39,7 @@
           :width="item.width"
           :fixed="item.fixed"
           :sortable="item.sortable"
+          v-bind="item"
         >
           <template slot-scope="{ row, $index }">
             <expand-dom
