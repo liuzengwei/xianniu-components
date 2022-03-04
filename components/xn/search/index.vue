@@ -8,7 +8,7 @@
         :prop="item.prop"
       >
         <xn-city
-          :data-level="item.options&&item.options.dataLevel || 2"
+          :data-level="(item.options && item.options.dataLevel) || 2"
           v-model="form.value[idx].modelVal"
           @on-city="handleChangeCity"
         />
@@ -148,7 +148,7 @@ export default {
   },
   data() {
     return {
-      city:{},
+      city: {},
       form: {
         value: [],
       },
@@ -167,8 +167,10 @@ export default {
       const formValue = {};
       if (this.formData) {
         this.formData.forEach((item, index) => {
+          
           const key = item.prop;
           const value = this.form.value[index].modelVal;
+
           if (this.isRange(item.type)) {
             if (
               item.options &&
@@ -180,8 +182,10 @@ export default {
               formValue[item.options.end] = value[1] || "";
             }
           } else if (item.type === "city") {
-            formValue[item?.options?.cityCode || "regionCode"] = this?.city?.cityCode
-            formValue[item?.options?.cityName || "regionName"] = this?.city?.cityName
+            formValue[item?.options?.cityCode || "regionCode"] =
+              this?.city?.cityCode || "";
+            formValue[item?.options?.cityName || "regionName"] =
+              this?.city?.cityName || "";
           } else {
             formValue[key] = value;
           }
@@ -192,6 +196,9 @@ export default {
     onReset() {
       this.form.value = [];
       this.formData.forEach((item, index) => {
+        if(item.type === 'city'){
+          this.city = {}
+        }
         this.form.value.push({
           key: item.prop,
           modelVal: "",
@@ -200,8 +207,8 @@ export default {
       this.$emit("on-reset");
       this.$emit("on-search", {});
     },
-    handleChangeCity({cityCodeLast:cityCode,cityNameLast:cityName}) {
-      this.city = {cityCode,cityName}
+    handleChangeCity({ cityCodeLast: cityCode, cityNameLast: cityName }) {
+      this.city = { cityCode, cityName };
     },
     onChangeDate(val) {
       // console.log(val);
