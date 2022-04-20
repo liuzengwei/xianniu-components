@@ -39,6 +39,8 @@
           :width="item.width"
           :fixed="item.fixed"
           :sortable="item.sortable"
+          :align="item.align || 'center'"
+          :show-overflow-tooltip="item.showOverflowTooltip || true"
           v-bind="item"
         >
           <template slot-scope="{ row, $index }">
