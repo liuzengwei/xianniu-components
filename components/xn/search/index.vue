@@ -23,6 +23,7 @@
             :key="idx"
             :label="item.label"
             :prop="item.prop"
+            class="xn-search--row_col"
           >
             <xn-city
               :data-level="(item.options && item.options.dataLevel) || 2"

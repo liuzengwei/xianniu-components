@@ -1,6 +1,6 @@
 <template>
   <!-- 城市联动 -->
-  <div>
+  <div class="xn-city">
     <span v-if="showType === 'text'">{{ cityLabel }}</span>
     <el-cascader
       v-else-if="showType === 'form'"
@@ -257,4 +257,8 @@ export default {
 }
 </script>
 
-<style></style>
+<style lang="scss">
+.xn-city{
+  width: 100%;
+}
+</style>
