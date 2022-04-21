@@ -243,5 +243,8 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss" scope>
+.el-range-editor.el-input__inner{
+  padding: 4px 10px;
+}
 </style>
