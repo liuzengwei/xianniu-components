@@ -239,6 +239,7 @@ export default {
       display: flex;
       ::v-deep .el-form-item__content {
         width: 100%;
+        height: 32px;
       }
       ::v-deep .el-form-item__label {
         flex: none;
