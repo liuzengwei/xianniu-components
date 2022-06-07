@@ -3,7 +3,6 @@
     <slot name="tools" />
     <el-table
       ref="table"
-      v-auto-height:maxHeight="autoHeight"
       class="xn-table"
       :class="{ 'disabled-all-selection': disabledAllSelection }"
       :data="data"
@@ -12,7 +11,6 @@
       :hover="hover"
       :row-key="rowKey"
       v-bind="$attrs"
-      :max-height="autoHeight ? maxHeight : null"
       @selection-change="handleSelectionChange"
       @sort-change="handleSortChange"
     >
@@ -162,10 +160,6 @@ export default {
     showPage: {
       type: [Boolean, String],
       default: true,
-    },
-    autoHeight: {
-      type: [Boolean, Number],
-      default: -95,
     },
     rowKey: {
       type: String,
