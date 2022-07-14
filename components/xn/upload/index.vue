@@ -276,6 +276,8 @@ export default {
       } else {
         if (file.size > _maxSize) {
           size = _maxSize / 1024;
+        } else {
+          size = file.size
         }
       }
       return new Promise((resolve) => {
