@@ -1,15 +1,19 @@
 <template>
-  <el-tree
-    ref="tree"
-    :data="data"
-    default-expand-all
-    :check-strictly="true"
-    :props="defaultProps"
-    :node-key="nodeKey"
-    show-checkbox
-    :render-content="renderContent"
-    @check="clickDeal"
-  />
+  <div class="xn-tree">
+    <el-tree
+      ref="tree"
+      class="xn-tree-main"
+      :data="data"
+      :indent="0"
+      default-expand-all
+      :check-strictly="true"
+      :props="defaultProps"
+      :node-key="nodeKey"
+      show-checkbox
+      :render-content="renderContent"
+      @check="clickDeal"
+    />
+  </div>
 </template>
 
 <script>
@@ -52,13 +56,23 @@ export default {
     },
     renderContent(h, { node, data }) {
       let className = ''
+      // let className1 = ''
       // perms这个是后台数据区分普通tree节点和横向tree节点的标志各位要根据实际情况做相对应的修改
-      if (data.parentId && data.parentId !== 0 && !data[this.defaultProps.children].length) {
+      if (
+        data.parentId &&
+        data.parentId !== 0 &&
+        !data[this.defaultProps.children].length
+      ) {
         className = 'especially'
       }
+      // if (!node.isLeaf) {
+      //   node.parent.className1 = 'pl-20'
+      // } else {
+      //   className1 = 'pl-0'
+      // }
       return (
-      // 在需要做横向排列的模块做标记
-        <div class={className}>{data[this.defaultProps.label]}</div>
+        // 在需要做横向排列的模块做标记
+        <div class={[className]}>{data[this.defaultProps.label]}</div>
       )
     },
 
@@ -66,17 +80,15 @@ export default {
 
     changeTreeClass() {
       // 找到之前做标记的class
-      var classDomList = document.getElementsByClassName('especially')
-      // 改变这几个样式
-      for (var i = 0; i < classDomList.length; i++) {
-        classDomList[i].parentNode.style.cssText = 'float: left'
-
-        classDomList[i].parentNode.className =
-          'el-tree-node__content option-wrapper'
-
-        classDomList[i].parentNode.parentNode.parentNode.style.marginLeft =
-          '40px'
-      }
+      // var classDomList = document.getElementsByClassName('especially')
+      // // 改变这几个样式
+      // for (var i = 0; i < classDomList.length; i++) {
+      //   // classDomList[i].parentNode.style.cssText = 'float: left'
+      //   classDomList[i].parentNode.className =
+      //     'el-tree-node__content option-wrapper'
+      //   classDomList[i].parentNode.style.marginLeft =
+      //     '-25px'
+      // }
     },
     clickDeal(currentObj, treeStatus) {
       this.clickCheck(currentObj, treeStatus, this.$refs.tree)
@@ -104,6 +116,7 @@ export default {
           this.uniteChildSame(currentObj, false, ref)
         }
       }
+      this.$emit('on-check', this.getCheckedKeys())
     },
     /**   统一处理子节点为相同的勾选状态  **/
     uniteChildSame(treeList, isSelected, ref) {
@@ -174,8 +187,93 @@ export default {
 }
 </script>
 
-<style scoped lang="scss">
-::v-deep .el-tree-node__content:hover{
-  background-color: #fff;
+<style lang="scss">
+.xn-tree {
+  width: 100%;
+  .el-tree > .el-tree-node:after {
+    border-top: none;
+  }
+  .el-tree-node {
+    position: relative;
+    z-index: 9;
+    padding-left: 16px;
+  }
+  //节点有间隙，隐藏掉展开按钮就好了,如果觉得空隙没事可以删掉
+  .el-tree-node__expand-icon.is-leaf {
+    display: none;
+  }
+  .el-tree-node__children {
+    padding-left: 16px;
+  }
+
+  .el-tree-node :last-child::before {
+    height: 38px;
+  }
+
+  .el-tree > .el-tree-node::before {
+    border-left: none;
+  }
+
+  .el-tree > .el-tree-node:after {
+    border-top: none;
+  }
+
+  .el-tree-node::before {
+    content: "";
+    left: -4px;
+    position: absolute;
+    right: auto;
+    border-width: 1px;
+  }
+
+  .el-tree-node:after {
+    content: "";
+    left: -4px;
+    position: absolute;
+    right: auto;
+    border-width: 1px;
+  }
+
+  .el-tree-node::before {
+    border-left: 1px dashed #dcdfe6;
+    bottom: 0px;
+    height: 100%;
+    top: -26px;
+    width: 1px;
+  }
+
+  .el-tree-node:after {
+    border-top: 1px dashed #dcdfe6;
+    height: 20px;
+    top: 12px;
+    width: 18px;
+  }
+  .el-tree .el-tree-node__expand-icon.expanded {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  .el-tree .el-icon-caret-right::before {
+    content: "\e723";
+    font-size: 16px;
+    color: #ff745c;
+    position: absolute;
+    left: -4px;
+    top: -3px;
+  }
+  .el-tree .el-tree-node__expand-icon.expanded.el-icon-caret-right::before {
+    content: "\e722";
+    font-size: 16px;
+    color: #ff745c;
+    position: absolute;
+    left: -4px;
+    top: -3px;
+  }
+  .el-tree-node__content {
+    padding-left: 8px !important;
+  }
+  .el-tree-node__content:hover {
+    background-color: #fff;
+  }
+
 }
 </style>
