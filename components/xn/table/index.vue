@@ -53,7 +53,7 @@
             <template v-if="item.more && item.more.options.length">
               <template v-for="(itemBtn, idxBtn) in item.more.options">
                 <expand-dom
-                  v-if="itemBtn.render"
+                  v-if="itemBtn.render && !itemBtn.show"
                   :key="idxBtn"
                   :column="itemBtn"
                   :row="row"
