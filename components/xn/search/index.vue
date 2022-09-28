@@ -182,7 +182,6 @@ export default {
     for (let i = 0, formData = this.formData; i < formData.length; i++) {
       const item = formData[i];
       item.isShow = i > 3 ? false : true;
-      console.log(item);
       this.form.value.push({
         key: item.prop,
         modelVal: "",
