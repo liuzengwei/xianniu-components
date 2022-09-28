@@ -61,8 +61,12 @@
               <el-option
                 v-for="(itemData, idxData) in item.data"
                 :key="idxData"
-                :label="itemData.label"
-                :value="itemData.value"
+                :label="
+                  itemData[(item.options && item.options.labelKey) || 'label']
+                "
+                :value="
+                  itemData[(item.options && item.options.valueKey) || 'value']
+                "
               />
             </el-select>
           </el-form-item>
@@ -126,6 +130,9 @@ export default {
     },
   },
   computed: {
+    _formData() {
+      return this.formData;
+    },
     toggle() {
       return this.isColl ? "el-icon-arrow-up" : "el-icon-arrow-down";
     },
@@ -175,6 +182,7 @@ export default {
     for (let i = 0, formData = this.formData; i < formData.length; i++) {
       const item = formData[i];
       item.isShow = i > 3 ? false : true;
+      console.log(item);
       this.form.value.push({
         key: item.prop,
         modelVal: "",
@@ -227,6 +235,11 @@ export default {
     },
     handleChangeCity({ cityCodeLast: cityCode, cityNameLast: cityName }) {
       this.city = { cityCode, cityName };
+    },
+    setData(key, data) {
+      const row =
+        this.formData && this.formData.find((item) => item.label === key);
+      this.$set(row, "data", data);
     },
   },
 };
