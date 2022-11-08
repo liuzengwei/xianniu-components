@@ -214,10 +214,10 @@ export default {
       imageView: "",
       isHidden: false,
       actionParams: {
-        action: `${domain.upload}/upload/uploadFile`,
+        action: `${domain.upload}`,
       },
       uploadHeaders: {
-        xnToken: this.$store.getters.token,
+        xnToken: localStorage.getItem('xnToken'),
       },
       viewList: [],
       tools,

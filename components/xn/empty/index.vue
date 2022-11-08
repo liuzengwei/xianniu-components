@@ -1,6 +1,10 @@
 <template>
   <div class="xn-empty">
-    <el-empty :image-size="size" :description="desc" :image="image"></el-empty>
+    <el-empty v-bind="$attrs" v-on="$listeners" :image-size="size" :description="desc" :image="image">
+     <slot name="default"></slot>
+     <slot name="image"></slot>
+     <slot name="description"></slot>
+    </el-empty>
   </div>
 </template>
 
