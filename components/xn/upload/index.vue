@@ -322,13 +322,8 @@ export default {
         },
       })
         .then((res) => {
-          var obj = {};
-          obj.accessoryName = res.data.data.accessoryName;
-          obj.accessorySize = res.data.data.accessorySize;
-          obj.ext = res.data.data.ext;
-          obj.imgFlag = res.data.data.imgFlag;
-          obj.url = res.data.data.url;
-          this.successFiles.push(obj);
+          const { name, size, ext, imgFlag, url,fileId } = res.data.data;
+          this.successFiles.push({name,size,ext,imgFlag,url,fileId});
           file.onSuccess();
           this.$emit("update:fileList", this.successFiles);
           this.$emit("on-success", this.successFiles);
