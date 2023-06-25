@@ -11,6 +11,8 @@
       show-checkbox
       :render-content="renderContent"
       @check="clickDeal"
+      v-bind="$attrs"
+      v-on="$listeners"
     />
   </div>
 </template>
