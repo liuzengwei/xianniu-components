@@ -47,12 +47,12 @@
         <el-popover width="300" trigger="hover">
           <el-form label-width="80px" size="mini">
             <el-form-item label="文件名">
-              <div :title="file.accessoryName" class="tip-filename">
-                {{ file.accessoryName }}
+              <div :title="file.accessoryName || file.name" class="tip-filename">
+                {{ file.accessoryName || file.name }}
               </div>
             </el-form-item>
             <el-form-item label="文件大小">
-              {{ tools.bytesToSize(file.accessorySize) }}
+              {{ tools.bytesToSize(file.accessorySize || file.size) }}
             </el-form-item>
             <el-form-item label="文件格式">
               {{ file.ext }}
